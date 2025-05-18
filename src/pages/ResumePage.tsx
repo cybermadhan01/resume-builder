@@ -70,11 +70,19 @@ const ResumePage = () => {
   const [selectedTemplate, setSelectedTemplate] = useState("basic");
   const [section, setSection] = useState("templates");
   const [isDownloading, setIsDownloading] = useState(false);
+  const [progress, setProgress] = useState<{[key: string]: boolean}>({
+    templateSelected: false,
+    contentEdited: false,
+  });
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
+    setProgress(prev => ({
+      ...prev,
+      templateSelected: true
+    }));
   };
 
   const handleResumeDataUpdate = (data: Partial<ResumeData>) => {
@@ -82,12 +90,17 @@ const ResumePage = () => {
       ...prevData,
       ...data
     }));
+    // Mark content as edited when changes are made
+    setProgress(prev => ({
+      ...prev,
+      contentEdited: true
+    }));
   };
 
   const handleExport = async (format = 'pdf') => {
     // Prevent multiple concurrent download attempts
     if (isDownloading) return;
-    
+
     setIsDownloading(true);
     if (!resumeRef.current) {
       toast({
@@ -100,7 +113,7 @@ const ResumePage = () => {
 
     const element = resumeRef.current;
     const filename = `${resumeData.personalInfo.name.replace(/\s+/g, '_')}_Resume`;
-    
+
     const options = {
       margin: 0.5,
       filename: `${filename}.pdf`,
@@ -124,13 +137,13 @@ const ResumePage = () => {
           });
         });
       } else if (format === 'png') {
-        html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+        html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
           const link = document.createElement('a');
           link.download = `${filename}.png`;
           link.href = canvas.toDataURL('image/png');
           link.click();
           setIsDownloading(false);
-          
+
           toast({
             title: "Resume Downloaded",
             description: "Your resume has been successfully downloaded as a PNG."
@@ -156,30 +169,66 @@ const ResumePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Tabs 
-        defaultValue={section} 
+      <Tabs
+        value={section}
         onValueChange={(value) => {
           // Update the section state to switch tabs
           setSection(value);
-        }} 
-        className="w-full"
-      >
+        }}
+        className="w-full transition-all duration-300 ease-in-out">
+
         <div className="container mx-auto px-4 py-8">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-center mb-2">Resume Builder</h1>
+            <div className="flex justify-center items-center space-x-4 text-sm text-gray-600">
+              <div className={`flex items-center ${section === 'templates' ? 'text-primary font-medium' : ''}`}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${section === 'templates' || progress.templateSelected ? 'bg-primary text-white' : 'bg-gray-200'}`}>1</span>
+                <span>Choose Template</span>
+              </div>
+              <div className="w-8 h-[2px] bg-gray-200"></div>
+              <div className={`flex items-center ${section === 'editor' ? 'text-primary font-medium' : ''}`}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${section === 'editor' || progress.contentEdited ? 'bg-primary text-white' : 'bg-gray-200'}`}>2</span>
+                <span>Edit Content</span>
+              </div>
+              <div className="w-8 h-[2px] bg-gray-200"></div>
+              <div className={`flex items-center ${section === 'preview' ? 'text-primary font-medium' : ''}`}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${section === 'preview' ? 'bg-primary text-white' : 'bg-gray-200'}`}>3</span>
+                <span>Preview & Export</span>
+              </div>
+            </div>
+          </div>
           <div className="flex flex-col gap-6">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="templates">Templates</TabsTrigger>
-              <TabsTrigger value="editor">Content Editor</TabsTrigger>
-              <TabsTrigger value="preview">Preview & Export</TabsTrigger>
+              <TabsTrigger 
+                value="templates" 
+                onClick={() => setSection("templates")}
+              >
+                Templates
+              </TabsTrigger>
+              <TabsTrigger 
+                value="editor" 
+                onClick={() => setSection("editor")}
+              >
+                Content Editor
+              </TabsTrigger>
+              <TabsTrigger 
+                value="preview" 
+                onClick={() => setSection("preview")}
+              >
+                Preview & Export
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="templates" className="space-y-6">
+            <TabsContent value="templates" className="space-y-6 transition-all duration-300 ease-in-out">
               <h2 className="text-2xl font-bold">Choose a Template</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {TEMPLATES.map((template) =>
                 <Card
                   key={template.id}
-                  className={`cursor-pointer hover:shadow-lg transition-shadow ${
-                  selectedTemplate === template.id ? "ring-2 ring-primary" : ""}`
+                  className={`cursor-pointer hover:shadow-lg transition-all ${
+                  selectedTemplate === template.id 
+                    ? "ring-2 ring-primary scale-105 shadow-md" 
+                    : "hover:scale-102"}`
                   }
                   onClick={() => handleTemplateSelect(template.id)}>
 
@@ -193,7 +242,7 @@ const ResumePage = () => {
                 )}
               </div>
               <div className="flex justify-end mt-6">
-                <Button 
+                <Button
                   onClick={() => {
                     // Show user feedback before switching tabs
                     toast({
@@ -203,13 +252,14 @@ const ResumePage = () => {
                     // Switch to editor tab
                     setSection("editor");
                   }}
-                >
-                  Continue to Editor
+                  className="bg-primary hover:bg-primary/90"
+                  disabled={!progress.templateSelected}>
+                  {!progress.templateSelected ? "Select a template first" : "Continue to Editor"}
                 </Button>
               </div>
             </TabsContent>
 
-            <TabsContent value="editor" className="space-y-6">
+            <TabsContent value="editor" className="space-y-6 transition-all duration-300 ease-in-out">
               <h2 className="text-2xl font-bold">Edit Your Resume</h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-6">
@@ -232,7 +282,7 @@ const ResumePage = () => {
               </div>
               <div className="flex justify-between mt-6">
                 <Button variant="outline" onClick={() => setSection("templates")}>Back to Templates</Button>
-                <Button 
+                <Button
                   onClick={() => {
                     toast({
                       title: "Loading Preview",
@@ -240,13 +290,14 @@ const ResumePage = () => {
                     });
                     setSection("preview");
                   }}
-                >
-                  Continue to Preview
+                  className="bg-primary hover:bg-primary/90"
+                  disabled={!progress.contentEdited}>
+                  {!progress.contentEdited ? "Edit content first" : "Continue to Preview"}
                 </Button>
               </div>
             </TabsContent>
 
-            <TabsContent value="preview" className="space-y-6">
+            <TabsContent value="preview" className="space-y-6 transition-all duration-300 ease-in-out">
               <h2 className="text-2xl font-bold">Preview & Export</h2>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
