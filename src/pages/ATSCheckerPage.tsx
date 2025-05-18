@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -154,10 +154,19 @@ const ATSCheckerPage = () => {
   const [jobDescription, setJobDescription] = useState(mockJobDescription);
   const [resumeText, setResumeText] = useState(mockResumeText);
   const [scoreResult, setScoreResult] = useState<ScoringResult | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleScore = () => {
     const result = performATSScoring(resumeText, jobDescription);
     setScoreResult(result);
+    
+    // Automatically switch to results tab and scroll to it
+    setTimeout(() => {
+      document.querySelector('[value="results"]')?.dispatchEvent(
+        new MouseEvent('click', { bubbles: true })
+      );
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
   };
 
   const getScoreColor = (score: number) => {
@@ -167,17 +176,17 @@ const ATSCheckerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 transition-all duration-300">
+      <div className="container mx-auto px-4 max-w-6xl">
         <div className="max-w-6xl mx-auto">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold mb-2">ATS Score Checker</h1>
+            <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ATS Score Checker</h1>
             <p className="text-gray-600">
               Analyze how your resume performs against Applicant Tracking Systems
             </p>
           </div>
           
-          <Tabs defaultValue="input" className="space-y-6">
+          <Tabs defaultValue="input" className="space-y-6 animate-in fade-in duration-300">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="input">Input</TabsTrigger>
               <TabsTrigger value="results" disabled={!scoreResult}>Results</TabsTrigger>
@@ -185,7 +194,7 @@ const ATSCheckerPage = () => {
             
             <TabsContent value="input" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
+                <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
                   <CardHeader>
                     <CardTitle>Job Description</CardTitle>
                     <CardDescription>
@@ -202,7 +211,7 @@ const ATSCheckerPage = () => {
                   </CardContent>
                 </Card>
                 
-                <Card>
+                <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
                   <CardHeader>
                     <CardTitle>Your Resume</CardTitle>
                     <CardDescription>
@@ -228,19 +237,21 @@ const ATSCheckerPage = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="flex justify-end">
-                    <Button onClick={handleScore}>Analyze Resume</Button>
+                    <Button onClick={handleScore} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02]">
+                      Analyze Resume
+                    </Button>
                   </CardFooter>
                 </Card>
               </div>
             </TabsContent>
             
-            <TabsContent value="results" className="space-y-6">
+            <TabsContent value="results" className="space-y-6" ref={resultsRef}>
               {scoreResult &&
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
                   <div className="lg:col-span-2 space-y-6">
-                    <Card>
+                    <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
                       <CardHeader>
-                        <CardTitle>ATS Scoring Results</CardTitle>
+                        <CardTitle className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ATS Scoring Results</CardTitle>
                         <CardDescription>
                           Here's how your resume performs against this job description
                         </CardDescription>
@@ -253,12 +264,12 @@ const ATSCheckerPage = () => {
                               {scoreResult.overallScore}%
                             </span>
                           </div>
-                          <Progress value={scoreResult.overallScore} className="h-3" />
+                          <Progress value={scoreResult.overallScore} className="h-4 animate-in slide-in-from-left duration-700" />
                         </div>
                         
                         <Separator />
                         
-                        <div className="space-y-6">
+                        <div className="space-y-6 animate-in fade-in duration-700">
                           <div className="space-y-3">
                             <div className="flex justify-between items-center">
                               <Label>Keyword Match</Label>
@@ -266,7 +277,7 @@ const ATSCheckerPage = () => {
                                 {scoreResult.keywordMatch.score}%
                               </span>
                             </div>
-                            <Progress value={scoreResult.keywordMatch.score} className="h-2" />
+                            <Progress value={scoreResult.keywordMatch.score} className="h-3 animate-in slide-in-from-left duration-500" />
                           </div>
                           
                           <div className="space-y-3">
@@ -276,7 +287,7 @@ const ATSCheckerPage = () => {
                                 {scoreResult.formatScore}%
                               </span>
                             </div>
-                            <Progress value={scoreResult.formatScore} className="h-2" />
+                            <Progress value={scoreResult.formatScore} className="h-3 animate-in slide-in-from-left duration-500" />
                           </div>
                           
                           <div className="space-y-3">
@@ -286,18 +297,18 @@ const ATSCheckerPage = () => {
                                 {scoreResult.contentScore}%
                               </span>
                             </div>
-                            <Progress value={scoreResult.contentScore} className="h-2" />
+                            <Progress value={scoreResult.contentScore} className="h-3 animate-in slide-in-from-left duration-500" />
                           </div>
                         </div>
                         
                         <Separator />
                         
                         <div className="space-y-4">
-                          <h3 className="font-semibold">Keyword Analysis</h3>
+                          <h3 className="font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Keyword Analysis</h3>
                           
                           <div className="space-y-3">
                             <Label className="text-sm text-gray-600">Keywords Found</Label>
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-2 animate-in fade-in duration-500">
                               {scoreResult.keywordMatch.matches.map((keyword, index) =>
                             <Badge key={index} variant="outline" className="bg-green-50 text-green-700 border-green-200">
                                   <CheckCircle className="mr-1 h-3 w-3" /> {keyword}
@@ -309,7 +320,7 @@ const ATSCheckerPage = () => {
                           {scoreResult.keywordMatch.missing.length > 0 &&
                         <div className="space-y-3">
                               <Label className="text-sm text-gray-600">Missing Keywords</Label>
-                              <div className="flex flex-wrap gap-2">
+                              <div className="flex flex-wrap gap-2 animate-in fade-in duration-500">
                                 {scoreResult.keywordMatch.missing.map((keyword, index) =>
                             <Badge key={index} variant="outline" className="bg-red-50 text-red-700 border-red-200">
                                     <AlertCircle className="mr-1 h-3 w-3" /> {keyword}
@@ -324,22 +335,22 @@ const ATSCheckerPage = () => {
                   </div>
                   
                   <div>
-                    <Card>
+                    <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
                       <CardHeader>
                         <div className="flex items-center gap-2">
                           <Lightbulb className="h-5 w-5 text-amber-500" />
-                          <CardTitle>Recommendations</CardTitle>
+                          <CardTitle className="text-lg bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">Recommendations</CardTitle>
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-4">
                         {scoreResult.recommendations.length > 0 ?
                       scoreResult.recommendations.map((recommendation, index) =>
-                      <Alert key={index} className="text-sm">
+                      <Alert key={index} className="text-sm animate-in fade-in duration-500 delay-100">
                               <AlertDescription>{recommendation}</AlertDescription>
                             </Alert>
                       ) :
 
-                      <Alert className="bg-green-50 text-green-700 border-green-200">
+                      <Alert className="bg-green-50 text-green-700 border-green-200 animate-in fade-in duration-500">
                             <CheckCircle className="h-4 w-4 mr-2" />
                             <AlertTitle>Great job!</AlertTitle>
                             <AlertDescription>
