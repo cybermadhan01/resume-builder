@@ -167,12 +167,12 @@ const ATSCheckerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold mb-2">ATS Score Checker</h1>
-            <p className="text-gray-600">
+    <div className="min-h-screen bg-gray-50 py-8" data-id="bu8amfp3f" data-path="src/pages/ATSCheckerPage.tsx">
+      <div className="container mx-auto px-4" data-id="jjyj03cdf" data-path="src/pages/ATSCheckerPage.tsx">
+        <div className="max-w-6xl mx-auto" data-id="d733qz2pl" data-path="src/pages/ATSCheckerPage.tsx">
+          <div className="mb-8 text-center" data-id="x9dk323cz" data-path="src/pages/ATSCheckerPage.tsx">
+            <h1 className="text-3xl font-bold mb-2" data-id="axa5gvxis" data-path="src/pages/ATSCheckerPage.tsx">ATS Score Checker</h1>
+            <p className="text-gray-600" data-id="b018ojd9f" data-path="src/pages/ATSCheckerPage.tsx">
               Analyze how your resume performs against Applicant Tracking Systems
             </p>
           </div>
@@ -184,7 +184,7 @@ const ATSCheckerPage = () => {
             </TabsList>
             
             <TabsContent value="input" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" data-id="bfi2yw8mw" data-path="src/pages/ATSCheckerPage.tsx">
                 <Card>
                   <CardHeader>
                     <CardTitle>Job Description</CardTitle>
@@ -210,13 +210,13 @@ const ATSCheckerPage = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
+                    <div className="space-y-4" data-id="iwsw2g1kc" data-path="src/pages/ATSCheckerPage.tsx">
+                      <div className="flex items-center gap-2" data-id="f9nbkytct" data-path="src/pages/ATSCheckerPage.tsx">
                         <Button variant="outline" size="sm" className="gap-2">
                           <Upload size={16} />
                           Upload Resume
                         </Button>
-                        <span className="text-sm text-gray-500">or paste below</span>
+                        <span className="text-sm text-gray-500" data-id="ze22jf8bx" data-path="src/pages/ATSCheckerPage.tsx">or paste below</span>
                       </div>
                       
                       <Textarea
@@ -236,8 +236,8 @@ const ATSCheckerPage = () => {
             
             <TabsContent value="results" className="space-y-6">
               {scoreResult &&
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className="lg:col-span-2 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" data-id="jcbnnrpnc" data-path="src/pages/ATSCheckerPage.tsx">
+                  <div className="lg:col-span-2 space-y-6" data-id="jaek8625l" data-path="src/pages/ATSCheckerPage.tsx">
                     <Card>
                       <CardHeader>
                         <CardTitle>ATS Scoring Results</CardTitle>
@@ -246,10 +246,10 @@ const ATSCheckerPage = () => {
                         </CardDescription>
                       </CardHeader>
                       <CardContent className="space-y-6">
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
+                        <div className="space-y-3" data-id="vhyi43dy9" data-path="src/pages/ATSCheckerPage.tsx">
+                          <div className="flex justify-between items-center" data-id="gor3yoafg" data-path="src/pages/ATSCheckerPage.tsx">
                             <Label>Overall ATS Score</Label>
-                            <span className={`font-bold text-lg ${getScoreColor(scoreResult.overallScore)}`}>
+                            <span className={`font-bold text-lg ${getScoreColor(scoreResult.overallScore)}`} data-id="jnsltwd13" data-path="src/pages/ATSCheckerPage.tsx">
                               {scoreResult.overallScore}%
                             </span>
                           </div>
@@ -258,31 +258,31 @@ const ATSCheckerPage = () => {
                         
                         <Separator />
                         
-                        <div className="space-y-6">
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
+                        <div className="space-y-6" data-id="5v7ni28gj" data-path="src/pages/ATSCheckerPage.tsx">
+                          <div className="space-y-3" data-id="9quzn6hcw" data-path="src/pages/ATSCheckerPage.tsx">
+                            <div className="flex justify-between items-center" data-id="hjqog2rfp" data-path="src/pages/ATSCheckerPage.tsx">
                               <Label>Keyword Match</Label>
-                              <span className={`font-bold ${getScoreColor(scoreResult.keywordMatch.score)}`}>
+                              <span className={`font-bold ${getScoreColor(scoreResult.keywordMatch.score)}`} data-id="9bbwgirp8" data-path="src/pages/ATSCheckerPage.tsx">
                                 {scoreResult.keywordMatch.score}%
                               </span>
                             </div>
                             <Progress value={scoreResult.keywordMatch.score} className="h-2" />
                           </div>
                           
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
+                          <div className="space-y-3" data-id="dk4cf4u0u" data-path="src/pages/ATSCheckerPage.tsx">
+                            <div className="flex justify-between items-center" data-id="7d5rc3249" data-path="src/pages/ATSCheckerPage.tsx">
                               <Label>Format & Structure</Label>
-                              <span className={`font-bold ${getScoreColor(scoreResult.formatScore)}`}>
+                              <span className={`font-bold ${getScoreColor(scoreResult.formatScore)}`} data-id="p0jzch2lb" data-path="src/pages/ATSCheckerPage.tsx">
                                 {scoreResult.formatScore}%
                               </span>
                             </div>
                             <Progress value={scoreResult.formatScore} className="h-2" />
                           </div>
                           
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
+                          <div className="space-y-3" data-id="viyc9uvbm" data-path="src/pages/ATSCheckerPage.tsx">
+                            <div className="flex justify-between items-center" data-id="uzyh4yij3" data-path="src/pages/ATSCheckerPage.tsx">
                               <Label>Content Quality</Label>
-                              <span className={`font-bold ${getScoreColor(scoreResult.contentScore)}`}>
+                              <span className={`font-bold ${getScoreColor(scoreResult.contentScore)}`} data-id="uqpzpglh2" data-path="src/pages/ATSCheckerPage.tsx">
                                 {scoreResult.contentScore}%
                               </span>
                             </div>
@@ -292,12 +292,12 @@ const ATSCheckerPage = () => {
                         
                         <Separator />
                         
-                        <div className="space-y-4">
-                          <h3 className="font-semibold">Keyword Analysis</h3>
+                        <div className="space-y-4" data-id="5wimh9a8x" data-path="src/pages/ATSCheckerPage.tsx">
+                          <h3 className="font-semibold" data-id="q15obt9un" data-path="src/pages/ATSCheckerPage.tsx">Keyword Analysis</h3>
                           
-                          <div className="space-y-3">
+                          <div className="space-y-3" data-id="7s85qv7vo" data-path="src/pages/ATSCheckerPage.tsx">
                             <Label className="text-sm text-gray-600">Keywords Found</Label>
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-2" data-id="cp8wc4kzl" data-path="src/pages/ATSCheckerPage.tsx">
                               {scoreResult.keywordMatch.matches.map((keyword, index) =>
                             <Badge key={index} variant="outline" className="bg-green-50 text-green-700 border-green-200">
                                   <CheckCircle className="mr-1 h-3 w-3" /> {keyword}
@@ -307,9 +307,9 @@ const ATSCheckerPage = () => {
                           </div>
                           
                           {scoreResult.keywordMatch.missing.length > 0 &&
-                        <div className="space-y-3">
+                        <div className="space-y-3" data-id="trgmj9k3q" data-path="src/pages/ATSCheckerPage.tsx">
                               <Label className="text-sm text-gray-600">Missing Keywords</Label>
-                              <div className="flex flex-wrap gap-2">
+                              <div className="flex flex-wrap gap-2" data-id="ubpnnsubk" data-path="src/pages/ATSCheckerPage.tsx">
                                 {scoreResult.keywordMatch.missing.map((keyword, index) =>
                             <Badge key={index} variant="outline" className="bg-red-50 text-red-700 border-red-200">
                                     <AlertCircle className="mr-1 h-3 w-3" /> {keyword}
@@ -323,10 +323,10 @@ const ATSCheckerPage = () => {
                     </Card>
                   </div>
                   
-                  <div>
+                  <div data-id="93sx7odqr" data-path="src/pages/ATSCheckerPage.tsx">
                     <Card>
                       <CardHeader>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2" data-id="0fzxatery" data-path="src/pages/ATSCheckerPage.tsx">
                           <Lightbulb className="h-5 w-5 text-amber-500" />
                           <CardTitle>Recommendations</CardTitle>
                         </div>

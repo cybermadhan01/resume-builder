@@ -158,7 +158,7 @@ const MenubarCheckboxItem = React.forwardRef<
     checked={checked}
     {...props}>
 
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center" data-id="ah131azu9" data-path="src/components/ui/menubar.tsx">
       <MenubarPrimitive.ItemIndicator>
         <Check className="h-4 w-4" />
       </MenubarPrimitive.ItemIndicator>
@@ -180,7 +180,7 @@ const MenubarRadioItem = React.forwardRef<
     )}
     {...props}>
 
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center" data-id="0xlvrc5yu" data-path="src/components/ui/menubar.tsx">
       <MenubarPrimitive.ItemIndicator>
         <Circle className="h-4 w-4 fill-current" />
       </MenubarPrimitive.ItemIndicator>
@@ -230,7 +230,7 @@ const MenubarShortcut = ({
         "ml-auto text-xs tracking-widest text-muted-foreground",
         className
       )}
-      {...props} />);
+      {...props} data-id="bejgbl0hm" data-path="src/components/ui/menubar.tsx" />);
 
 
 };

@@ -138,7 +138,7 @@ const Carousel = React.forwardRef<
           className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"
-          {...props}>
+          {...props} data-id="ehqglpgzj" data-path="src/components/ui/carousel.tsx">
 
           {children}
         </div>
@@ -155,7 +155,7 @@ const CarouselContent = React.forwardRef<
     const { carouselRef, orientation } = useCarousel();
 
     return (
-      <div ref={carouselRef} className="overflow-hidden">
+      <div ref={carouselRef} className="overflow-hidden" data-id="td7mmh24r" data-path="src/components/ui/carousel.tsx">
       <div
           ref={ref}
           className={cn(
@@ -163,7 +163,7 @@ const CarouselContent = React.forwardRef<
             orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
             className
           )}
-          {...props} />
+          {...props} data-id="5pnzjwk18" data-path="src/components/ui/carousel.tsx" />
 
     </div>);
 
@@ -186,7 +186,7 @@ const CarouselItem = React.forwardRef<
           orientation === "horizontal" ? "pl-4" : "pt-4",
           className
         )}
-        {...props} />);
+        {...props} data-id="7npr6jvgy" data-path="src/components/ui/carousel.tsx" />);
 
 
   });
@@ -215,7 +215,7 @@ const CarouselPrevious = React.forwardRef<
         {...props}>
 
       <ArrowLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only" data-id="07mzl8mqr" data-path="src/components/ui/carousel.tsx">Previous slide</span>
     </Button>);
 
   });
@@ -244,7 +244,7 @@ const CarouselNext = React.forwardRef<
         {...props}>
 
       <ArrowRight className="h-4 w-4" />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only" data-id="mxea0sm8d" data-path="src/components/ui/carousel.tsx">Next slide</span>
     </Button>);
 
   });

@@ -61,13 +61,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setUser(null);
       toast({
         title: 'Logged out',
-        description: 'You have been successfully logged out.',
+        description: 'You have been successfully logged out.'
       });
     } catch (error) {
       toast({
         title: 'Logout failed',
         description: String(error),
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     isLoading,
     isAuthenticated: !!user,
     logout,
-    refreshUser,
+    refreshUser
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

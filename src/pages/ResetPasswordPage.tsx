@@ -40,21 +40,21 @@ const ResetPasswordPage = () => {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!token) {
       toast({
         title: 'Missing Token',
         description: 'Reset token is required.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return;
     }
-    
+
     if (password !== confirmPassword) {
       toast({
         title: 'Passwords do not match',
         description: 'Please ensure your passwords match.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return;
     }
@@ -63,23 +63,23 @@ const ResetPasswordPage = () => {
     try {
       const { error } = await window.ezsite.apis.resetPassword({
         token: token,
-        password: password,
+        password: password
       });
-      
+
       if (error) throw error;
-      
+
       toast({
         title: 'Password Reset Successful',
         description: 'Your password has been reset. You will be redirected to the home page in 5 seconds.',
-        variant: 'default',
+        variant: 'default'
       });
-      
+
       setCountdown(5);
     } catch (error) {
       toast({
         title: 'Password Reset Failed',
         description: String(error),
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -87,7 +87,7 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black p-4">
+    <div className="flex items-center justify-center min-h-screen bg-black p-4" data-id="j5g3jkntm" data-path="src/pages/ResetPasswordPage.tsx">
       <Card className="w-full max-w-md border border-purple-700 bg-gray-900 text-white">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
@@ -98,8 +98,8 @@ const ResetPasswordPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleResetPassword} className="space-y-4">
-            <div className="space-y-2">
+          <form onSubmit={handleResetPassword} className="space-y-4" data-id="7k9lbtww4" data-path="src/pages/ResetPasswordPage.tsx">
+            <div className="space-y-2" data-id="3fixhns1s" data-path="src/pages/ResetPasswordPage.tsx">
               <Label htmlFor="token">Reset Token</Label>
               <Input
                 id="token"
@@ -108,10 +108,10 @@ const ResetPasswordPage = () => {
                 placeholder="Your reset token"
                 disabled={!!query.get('token')}
                 required
-                className="bg-gray-800 border-gray-700"
-              />
+                className="bg-gray-800 border-gray-700" />
+
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2" data-id="v545cqylo" data-path="src/pages/ResetPasswordPage.tsx">
               <Label htmlFor="password">New Password</Label>
               <Input
                 id="password"
@@ -119,10 +119,10 @@ const ResetPasswordPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-gray-800 border-gray-700"
-              />
+                className="bg-gray-800 border-gray-700" />
+
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2" data-id="eg784bp3s" data-path="src/pages/ResetPasswordPage.tsx">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
                 id="confirmPassword"
@@ -130,28 +130,28 @@ const ResetPasswordPage = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="bg-gray-800 border-gray-700"
-              />
+                className="bg-gray-800 border-gray-700" />
+
             </div>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-              disabled={isLoading}
-            >
+              disabled={isLoading}>
+
               {isLoading ? 'Resetting...' : 'Reset Password'}
             </Button>
           </form>
         </CardContent>
         <CardFooter>
-          {countdown !== null && (
-            <p className="text-center w-full text-gray-400">
+          {countdown !== null &&
+          <p className="text-center w-full text-gray-400" data-id="u47ubfnzc" data-path="src/pages/ResetPasswordPage.tsx">
               Redirecting to home page in {countdown} seconds...
             </p>
-          )}
+          }
         </CardFooter>
       </Card>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ResetPasswordPage;

@@ -96,10 +96,10 @@ const ResumePage = () => {
   const SelectedTemplateComponent = TEMPLATES.find((t) => t.id === selectedTemplate)?.component || BasicTemplate;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" data-id="aaqg32o7n" data-path="src/pages/ResumePage.tsx">
       <Tabs defaultValue={section} onValueChange={setSection} className="w-full">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col gap-6">
+        <div className="container mx-auto px-4 py-8" data-id="qjvolalkr" data-path="src/pages/ResumePage.tsx">
+          <div className="flex flex-col gap-6" data-id="d8e1vyd4i" data-path="src/pages/ResumePage.tsx">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="templates">Templates</TabsTrigger>
               <TabsTrigger value="editor">Content Editor</TabsTrigger>
@@ -107,8 +107,8 @@ const ResumePage = () => {
             </TabsList>
 
             <TabsContent value="templates" className="space-y-6">
-              <h2 className="text-2xl font-bold">Choose a Template</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <h2 className="text-2xl font-bold" data-id="ezb6tyu61" data-path="src/pages/ResumePage.tsx">Choose a Template</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6" data-id="skmo6disu" data-path="src/pages/ResumePage.tsx">
                 {TEMPLATES.map((template) =>
                 <Card
                   key={template.id}
@@ -118,74 +118,74 @@ const ResumePage = () => {
                   onClick={() => handleTemplateSelect(template.id)}>
 
                     <CardContent className="p-4">
-                      <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden">
+                      <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden" data-id="gsx3zv3en" data-path="src/pages/ResumePage.tsx">
                         <template.component resumeData={resumeData} preview={true} />
                       </div>
-                      <h3 className="mt-3 text-center font-medium">{template.name}</h3>
+                      <h3 className="mt-3 text-center font-medium" data-id="7bhlutecr" data-path="src/pages/ResumePage.tsx">{template.name}</h3>
                     </CardContent>
                   </Card>
                 )}
               </div>
-              <div className="flex justify-end mt-6">
+              <div className="flex justify-end mt-6" data-id="rxvo86xdd" data-path="src/pages/ResumePage.tsx">
                 <Button onClick={() => setSection("editor")}>Continue to Editor</Button>
               </div>
             </TabsContent>
 
             <TabsContent value="editor" className="space-y-6">
-              <h2 className="text-2xl font-bold">Edit Your Resume</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="space-y-6">
+              <h2 className="text-2xl font-bold" data-id="rs6vg7yxq" data-path="src/pages/ResumePage.tsx">Edit Your Resume</h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" data-id="ldat82u0z" data-path="src/pages/ResumePage.tsx">
+                <div className="space-y-6" data-id="goziia45a" data-path="src/pages/ResumePage.tsx">
                   <ResumeEditor
                     resumeData={resumeData}
                     onUpdate={handleResumeDataUpdate} />
 
                 </div>
 
-                <div>
+                <div data-id="gny5oib6b" data-path="src/pages/ResumePage.tsx">
                   <Card className="sticky top-6">
                     <CardContent className="p-4">
-                      <h3 className="text-lg font-semibold mb-3">Preview</h3>
-                      <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden scale-90 origin-top">
+                      <h3 className="text-lg font-semibold mb-3" data-id="k7ddxk8wn" data-path="src/pages/ResumePage.tsx">Preview</h3>
+                      <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden scale-90 origin-top" data-id="uesp4ee5n" data-path="src/pages/ResumePage.tsx">
                         <SelectedTemplateComponent resumeData={resumeData} />
                       </div>
                     </CardContent>
                   </Card>
                 </div>
               </div>
-              <div className="flex justify-between mt-6">
+              <div className="flex justify-between mt-6" data-id="hvq8zlsjf" data-path="src/pages/ResumePage.tsx">
                 <Button variant="outline" onClick={() => setSection("templates")}>Back to Templates</Button>
                 <Button onClick={() => setSection("preview")}>Continue to Preview</Button>
               </div>
             </TabsContent>
 
             <TabsContent value="preview" className="space-y-6">
-              <h2 className="text-2xl font-bold">Preview & Export</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
+              <h2 className="text-2xl font-bold" data-id="yelq60wx5" data-path="src/pages/ResumePage.tsx">Preview & Export</h2>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" data-id="ttll6oska" data-path="src/pages/ResumePage.tsx">
+                <div className="lg:col-span-2" data-id="ka4561jt5" data-path="src/pages/ResumePage.tsx">
                   <Card>
                     <CardContent className="p-4">
-                      <div className="bg-white border rounded-md overflow-hidden mx-auto max-w-[800px]">
+                      <div className="bg-white border rounded-md overflow-hidden mx-auto max-w-[800px]" data-id="1q6wd3ivf" data-path="src/pages/ResumePage.tsx">
                         <SelectedTemplateComponent resumeData={resumeData} />
                       </div>
                     </CardContent>
                   </Card>
                 </div>
-                <div>
+                <div data-id="g0cnuskbh" data-path="src/pages/ResumePage.tsx">
                   <Card>
                     <CardContent className="p-6 space-y-6">
-                      <div>
-                        <h3 className="text-xl font-semibold mb-3">Export Options</h3>
-                        <div className="space-y-3">
+                      <div data-id="njnkt8qsr" data-path="src/pages/ResumePage.tsx">
+                        <h3 className="text-xl font-semibold mb-3" data-id="8a965h089" data-path="src/pages/ResumePage.tsx">Export Options</h3>
+                        <div className="space-y-3" data-id="qx7l5em6c" data-path="src/pages/ResumePage.tsx">
                           <Button className="w-full" onClick={handleExport}>Download as PDF</Button>
                           <Button variant="outline" className="w-full" onClick={handleExport}>Download as PNG</Button>
                         </div>
                       </div>
                       
-                      <hr className="my-4" />
+                      <hr className="my-4" data-id="phmurrby4" data-path="src/pages/ResumePage.tsx" />
                       
-                      <div>
-                        <h3 className="text-xl font-semibold mb-3">ATS Score</h3>
-                        <p className="text-sm text-gray-600 mb-4">
+                      <div data-id="qa0jyepmo" data-path="src/pages/ResumePage.tsx">
+                        <h3 className="text-xl font-semibold mb-3" data-id="wobhfu7ms" data-path="src/pages/ResumePage.tsx">ATS Score</h3>
+                        <p className="text-sm text-gray-600 mb-4" data-id="hwfk7y2ha" data-path="src/pages/ResumePage.tsx">
                           Use our ATS Score Checker to see how your resume performs against Applicant Tracking Systems.
                         </p>
                         <Button variant="outline" className="w-full" onClick={handleCheckATS}>Check ATS Score</Button>
@@ -194,7 +194,7 @@ const ResumePage = () => {
                   </Card>
                 </div>
               </div>
-              <div className="flex justify-between mt-6">
+              <div className="flex justify-between mt-6" data-id="ue722us8o" data-path="src/pages/ResumePage.tsx">
                 <Button variant="outline" onClick={() => setSection("editor")}>Back to Editor</Button>
               </div>
             </TabsContent>

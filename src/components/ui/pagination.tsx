@@ -9,7 +9,7 @@ const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) =>
   role="navigation"
   aria-label="pagination"
   className={cn("mx-auto flex w-full justify-center", className)}
-  {...props} />;
+  {...props} data-id="6qb1jzsth" data-path="src/components/ui/pagination.tsx" />;
 
 
 Pagination.displayName = "Pagination";
@@ -21,7 +21,7 @@ const PaginationContent = React.forwardRef<
   <ul
     ref={ref}
     className={cn("flex flex-row items-center gap-1", className)}
-    {...props} />
+    {...props} data-id="l8uuhs3hy" data-path="src/components/ui/pagination.tsx" />
 
 );
 PaginationContent.displayName = "PaginationContent";
@@ -30,7 +30,7 @@ const PaginationItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<"li">>(
   ({ className, ...props }, ref) =>
-  <li ref={ref} className={cn("", className)} {...props} />
+  <li ref={ref} className={cn("", className)} {...props} data-id="htrfmwze6" data-path="src/components/ui/pagination.tsx" />
 );
 PaginationItem.displayName = "PaginationItem";
 
@@ -54,7 +54,7 @@ const PaginationLink = ({
     }),
     className
   )}
-  {...props} />;
+  {...props} data-id="6f1bgsabl" data-path="src/components/ui/pagination.tsx" />;
 
 
 PaginationLink.displayName = "PaginationLink";
@@ -70,7 +70,7 @@ const PaginationPrevious = ({
   {...props}>
 
     <ChevronLeft className="h-4 w-4" />
-    <span>Previous</span>
+    <span data-id="u0pclmkn9" data-path="src/components/ui/pagination.tsx">Previous</span>
   </PaginationLink>;
 
 PaginationPrevious.displayName = "PaginationPrevious";
@@ -85,7 +85,7 @@ const PaginationNext = ({
   className={cn("gap-1 pr-2.5", className)}
   {...props}>
 
-    <span>Next</span>
+    <span data-id="a824513ww" data-path="src/components/ui/pagination.tsx">Next</span>
     <ChevronRight className="h-4 w-4" />
   </PaginationLink>;
 
@@ -98,10 +98,10 @@ const PaginationEllipsis = ({
 <span
   aria-hidden
   className={cn("flex h-9 w-9 items-center justify-center", className)}
-  {...props}>
+  {...props} data-id="fbqxhskk7" data-path="src/components/ui/pagination.tsx">
 
     <MoreHorizontal className="h-4 w-4" />
-    <span className="sr-only">More pages</span>
+    <span className="sr-only" data-id="0aqujceo2" data-path="src/components/ui/pagination.tsx">More pages</span>
   </span>;
 
 PaginationEllipsis.displayName = "PaginationEllipsis";

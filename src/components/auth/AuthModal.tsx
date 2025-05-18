@@ -30,7 +30,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       toast({
         title: 'Success!',
         description: 'You have been logged in.',
-        variant: 'default',
+        variant: 'default'
       });
       onClose();
       // Reload the page to update auth state
@@ -39,7 +39,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       toast({
         title: 'Login failed',
         description: String(error),
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -52,7 +52,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       toast({
         title: 'Passwords do not match',
         description: 'Please ensure your passwords match.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return;
     }
@@ -64,14 +64,14 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       toast({
         title: 'Registration successful!',
         description: 'Please check your email to verify your account.',
-        variant: 'default',
+        variant: 'default'
       });
       setActiveTab('login');
     } catch (error) {
       toast({
         title: 'Registration failed',
         description: String(error),
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -87,13 +87,13 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       toast({
         title: 'Reset email sent!',
         description: 'Please check your email for the reset link.',
-        variant: 'default',
+        variant: 'default'
       });
     } catch (error) {
       toast({
         title: 'Failed to send reset email',
         description: String(error),
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -106,7 +106,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
       toast({
         title: 'Passwords do not match',
         description: 'Please ensure your passwords match.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       return;
     }
@@ -115,20 +115,20 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
     try {
       const { error } = await window.ezsite.apis.resetPassword({
         token: resetToken,
-        password,
+        password
       });
       if (error) throw error;
       toast({
         title: 'Password reset successful!',
         description: 'You can now login with your new password.',
-        variant: 'default',
+        variant: 'default'
       });
       setActiveTab('login');
     } catch (error) {
       toast({
         title: 'Password reset failed',
         description: String(error),
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
@@ -153,8 +153,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           </TabsList>
 
           <TabsContent value="login" className="py-4">
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleLogin} className="space-y-4" data-id="twgp7ypxg" data-path="src/components/auth/AuthModal.tsx">
+              <div className="space-y-2" data-id="96oivb1zm" data-path="src/components/auth/AuthModal.tsx">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -163,10 +163,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
                   required
-                  className="bg-gray-800 border-gray-700"
-                />
+                  className="bg-gray-800 border-gray-700" />
+
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2" data-id="1fq34rbk5" data-path="src/components/auth/AuthModal.tsx">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -174,22 +174,22 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="bg-gray-800 border-gray-700"
-                />
+                  className="bg-gray-800 border-gray-700" />
+
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-              >
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+
                 {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
-              <div className="text-center">
+              <div className="text-center" data-id="enyajtsuu" data-path="src/components/auth/AuthModal.tsx">
                 <button
                   type="button"
                   onClick={() => setActiveTab('reset')}
-                  className="text-sm text-purple-400 hover:text-purple-300"
-                >
+                  className="text-sm text-purple-400 hover:text-purple-300" data-id="k8s5gt4eh" data-path="src/components/auth/AuthModal.tsx">
+
                   Forgot password?
                 </button>
               </div>
@@ -197,8 +197,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           </TabsContent>
 
           <TabsContent value="register" className="py-4">
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleRegister} className="space-y-4" data-id="uf04dllue" data-path="src/components/auth/AuthModal.tsx">
+              <div className="space-y-2" data-id="k5w82t1xg" data-path="src/components/auth/AuthModal.tsx">
                 <Label htmlFor="register-email">Email</Label>
                 <Input
                   id="register-email"
@@ -207,10 +207,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@example.com"
                   required
-                  className="bg-gray-800 border-gray-700"
-                />
+                  className="bg-gray-800 border-gray-700" />
+
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2" data-id="ubxom3jd0" data-path="src/components/auth/AuthModal.tsx">
                 <Label htmlFor="register-password">Password</Label>
                 <Input
                   id="register-password"
@@ -218,10 +218,10 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="bg-gray-800 border-gray-700"
-                />
+                  className="bg-gray-800 border-gray-700" />
+
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2" data-id="wp1b8tzhu" data-path="src/components/auth/AuthModal.tsx">
                 <Label htmlFor="confirm-password">Confirm Password</Label>
                 <Input
                   id="confirm-password"
@@ -229,100 +229,100 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="bg-gray-800 border-gray-700"
-                />
+                  className="bg-gray-800 border-gray-700" />
+
               </div>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-              >
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+
                 {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
           </TabsContent>
 
           <TabsContent value="reset" className="py-4">
-            {!resetToken ? (
-              <form onSubmit={handleResetRequest} className="space-y-4">
-                <div className="space-y-2">
+            {!resetToken ?
+            <form onSubmit={handleResetRequest} className="space-y-4" data-id="7o6rpwipe" data-path="src/components/auth/AuthModal.tsx">
+                <div className="space-y-2" data-id="5vzvh3m68" data-path="src/components/auth/AuthModal.tsx">
                   <Label htmlFor="reset-email">Email</Label>
                   <Input
-                    id="reset-email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@example.com"
-                    required
-                    className="bg-gray-800 border-gray-700"
-                  />
+                  id="reset-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  required
+                  className="bg-gray-800 border-gray-700" />
+
                 </div>
-                <Button 
-                  type="submit" 
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                >
+                <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+
                   {isLoading ? 'Sending...' : 'Send Reset Link'}
                 </Button>
-                <div className="text-center">
+                <div className="text-center" data-id="dbug97ask" data-path="src/components/auth/AuthModal.tsx">
                   <button
-                    type="button"
-                    onClick={() => setActiveTab('login')}
-                    className="text-sm text-purple-400 hover:text-purple-300"
-                  >
+                  type="button"
+                  onClick={() => setActiveTab('login')}
+                  className="text-sm text-purple-400 hover:text-purple-300" data-id="jisea91zg" data-path="src/components/auth/AuthModal.tsx">
+
                     Back to Login
                   </button>
                 </div>
-              </form>
-            ) : (
-              <form onSubmit={handleResetPassword} className="space-y-4">
-                <div className="space-y-2">
+              </form> :
+
+            <form onSubmit={handleResetPassword} className="space-y-4" data-id="nnn6da42j" data-path="src/components/auth/AuthModal.tsx">
+                <div className="space-y-2" data-id="qno0aouaz" data-path="src/components/auth/AuthModal.tsx">
                   <Label htmlFor="reset-token">Reset Token</Label>
                   <Input
-                    id="reset-token"
-                    type="text"
-                    value={resetToken}
-                    onChange={(e) => setResetToken(e.target.value)}
-                    required
-                    className="bg-gray-800 border-gray-700"
-                  />
+                  id="reset-token"
+                  type="text"
+                  value={resetToken}
+                  onChange={(e) => setResetToken(e.target.value)}
+                  required
+                  className="bg-gray-800 border-gray-700" />
+
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2" data-id="8gd74tjuw" data-path="src/components/auth/AuthModal.tsx">
                   <Label htmlFor="new-password">New Password</Label>
                   <Input
-                    id="new-password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="bg-gray-800 border-gray-700"
-                  />
+                  id="new-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="bg-gray-800 border-gray-700" />
+
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2" data-id="2bh7c3h0b" data-path="src/components/auth/AuthModal.tsx">
                   <Label htmlFor="confirm-new-password">Confirm New Password</Label>
                   <Input
-                    id="confirm-new-password"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    className="bg-gray-800 border-gray-700"
-                  />
+                  id="confirm-new-password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  className="bg-gray-800 border-gray-700" />
+
                 </div>
-                <Button 
-                  type="submit" 
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                >
+                <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+
                   {isLoading ? 'Resetting...' : 'Reset Password'}
                 </Button>
               </form>
-            )}
+            }
           </TabsContent>
         </Tabs>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>);
+
 };
 
 export default AuthModal;
