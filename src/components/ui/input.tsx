@@ -12,7 +12,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           className
         )}
         ref={ref}
-        {...props} data-id="ek9xaw4wt" data-path="src/components/ui/input.tsx" />);
+        {...props} />);
 
 
   }

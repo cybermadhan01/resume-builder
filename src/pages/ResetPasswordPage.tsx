@@ -87,7 +87,7 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black p-4" data-id="j5g3jkntm" data-path="src/pages/ResetPasswordPage.tsx">
+    <div className="flex items-center justify-center min-h-screen bg-black p-4">
       <Card className="w-full max-w-md border border-purple-700 bg-gray-900 text-white">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
@@ -98,8 +98,8 @@ const ResetPasswordPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleResetPassword} className="space-y-4" data-id="7k9lbtww4" data-path="src/pages/ResetPasswordPage.tsx">
-            <div className="space-y-2" data-id="3fixhns1s" data-path="src/pages/ResetPasswordPage.tsx">
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div className="space-y-2">
               <Label htmlFor="token">Reset Token</Label>
               <Input
                 id="token"
@@ -111,7 +111,7 @@ const ResetPasswordPage = () => {
                 className="bg-gray-800 border-gray-700" />
 
             </div>
-            <div className="space-y-2" data-id="v545cqylo" data-path="src/pages/ResetPasswordPage.tsx">
+            <div className="space-y-2">
               <Label htmlFor="password">New Password</Label>
               <Input
                 id="password"
@@ -122,7 +122,7 @@ const ResetPasswordPage = () => {
                 className="bg-gray-800 border-gray-700" />
 
             </div>
-            <div className="space-y-2" data-id="eg784bp3s" data-path="src/pages/ResetPasswordPage.tsx">
+            <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
                 id="confirmPassword"
@@ -144,7 +144,7 @@ const ResetPasswordPage = () => {
         </CardContent>
         <CardFooter>
           {countdown !== null &&
-          <p className="text-center w-full text-gray-400" data-id="u47ubfnzc" data-path="src/pages/ResetPasswordPage.tsx">
+          <p className="text-center w-full text-gray-400">
               Redirecting to home page in {countdown} seconds...
             </p>
           }

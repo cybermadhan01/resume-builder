@@ -7,7 +7,7 @@ function Skeleton({
   return (
     <div
       className={cn("animate-pulse rounded-md bg-primary/10", className)}
-      {...props} data-id="v31mrhenk" data-path="src/components/ui/skeleton.tsx" />);
+      {...props} />);
 
 
 }

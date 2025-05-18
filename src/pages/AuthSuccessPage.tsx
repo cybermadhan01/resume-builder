@@ -23,7 +23,7 @@ const AuthSuccessPage = () => {
   }, [navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black p-4" data-id="d1qh0cxde" data-path="src/pages/AuthSuccessPage.tsx">
+    <div className="flex items-center justify-center min-h-screen bg-black p-4">
       <Card className="w-full max-w-md border border-purple-700 bg-gray-900 text-white">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
@@ -34,28 +34,28 @@ const AuthSuccessPage = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center space-y-4">
-          <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center" data-id="n38shmto5" data-path="src/pages/AuthSuccessPage.tsx">
+          <div className="w-24 h-24 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-12 w-12 text-white"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor" data-id="avlt5vlf4" data-path="src/pages/AuthSuccessPage.tsx">
+              stroke="currentColor">
 
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M5 13l4 4L19 7" data-id="nsni8sk2z" data-path="src/pages/AuthSuccessPage.tsx" />
+                d="M5 13l4 4L19 7" />
 
             </svg>
           </div>
-          <p className="text-center text-gray-300" data-id="f5vpfwef8" data-path="src/pages/AuthSuccessPage.tsx">
+          <p className="text-center text-gray-300">
             Thank you for verifying your email. You can now log in to your account and start building your resume!
           </p>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <p className="text-center text-gray-400" data-id="edjb0y1v1" data-path="src/pages/AuthSuccessPage.tsx">
+          <p className="text-center text-gray-400">
             Redirecting to home page in {countdown} seconds...
           </p>
           <Button

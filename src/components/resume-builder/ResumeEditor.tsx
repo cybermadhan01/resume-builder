@@ -77,13 +77,13 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
   };
 
   return (
-    <div className="space-y-6" data-id="f4kodviw1" data-path="src/components/resume-builder/ResumeEditor.tsx">
+    <div className="space-y-6">
       <Card>
         <CardContent className="p-6">
-          <h3 className="text-xl font-semibold mb-4" data-id="dfw1dji58" data-path="src/components/resume-builder/ResumeEditor.tsx">Personal Information</h3>
-          <div className="space-y-4" data-id="psp70cibr" data-path="src/components/resume-builder/ResumeEditor.tsx">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-id="tasn9ovv9" data-path="src/components/resume-builder/ResumeEditor.tsx">
-              <div className="space-y-2" data-id="v1zaqb042" data-path="src/components/resume-builder/ResumeEditor.tsx">
+          <h3 className="text-xl font-semibold mb-4">Personal Information</h3>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
@@ -96,7 +96,7 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                   })} />
 
               </div>
-              <div className="space-y-2" data-id="of17mu6b0" data-path="src/components/resume-builder/ResumeEditor.tsx">
+              <div className="space-y-2">
                 <Label htmlFor="title">Job Title</Label>
                 <Input
                   id="title"
@@ -111,8 +111,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4" data-id="gta85zm93" data-path="src/components/resume-builder/ResumeEditor.tsx">
-              <div className="space-y-2" data-id="1531thcds" data-path="src/components/resume-builder/ResumeEditor.tsx">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -126,7 +126,7 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                   })} />
 
               </div>
-              <div className="space-y-2" data-id="nkywxk4fh" data-path="src/components/resume-builder/ResumeEditor.tsx">
+              <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
                 <Input
                   id="phone"
@@ -141,7 +141,7 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
               </div>
             </div>
             
-            <div className="space-y-2" data-id="yeos3hr1d" data-path="src/components/resume-builder/ResumeEditor.tsx">
+            <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
               <Input
                 id="address"
@@ -155,7 +155,7 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
 
             </div>
             
-            <div className="space-y-2" data-id="8qohv20yz" data-path="src/components/resume-builder/ResumeEditor.tsx">
+            <div className="space-y-2">
               <Label htmlFor="summary">Professional Summary</Label>
               <Textarea
                 id="summary"
@@ -175,8 +175,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
       
       <Card>
         <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-4" data-id="9f2bxdo7d" data-path="src/components/resume-builder/ResumeEditor.tsx">
-            <h3 className="text-xl font-semibold" data-id="f1m9il971" data-path="src/components/resume-builder/ResumeEditor.tsx">Experience</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold">Experience</h3>
             <Button
               variant="outline"
               size="sm"
@@ -188,9 +188,9 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
           </div>
           
           {resumeData.experience.map((exp, index) =>
-          <div key={exp.id} className="mb-6" data-id="ujzp2scns" data-path="src/components/resume-builder/ResumeEditor.tsx">
-              <div className="flex justify-between items-start mb-3" data-id="f42qv00l1" data-path="src/components/resume-builder/ResumeEditor.tsx">
-                <h4 className="font-medium" data-id="8ootza40h" data-path="src/components/resume-builder/ResumeEditor.tsx">Experience {index + 1}</h4>
+          <div key={exp.id} className="mb-6">
+              <div className="flex justify-between items-start mb-3">
+                <h4 className="font-medium">Experience {index + 1}</h4>
                 <Button
                 variant="ghost"
                 size="sm"
@@ -201,15 +201,15 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3" data-id="q2mwthad3" data-path="src/components/resume-builder/ResumeEditor.tsx">
-                <div className="space-y-2" data-id="3l9ho5qhe" data-path="src/components/resume-builder/ResumeEditor.tsx">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                <div className="space-y-2">
                   <Label>Company</Label>
                   <Input
                   value={exp.company}
                   onChange={(e) => updateExperience(index, "company", e.target.value)} />
 
                 </div>
-                <div className="space-y-2" data-id="86alp6mrn" data-path="src/components/resume-builder/ResumeEditor.tsx">
+                <div className="space-y-2">
                   <Label>Position</Label>
                   <Input
                   value={exp.position}
@@ -218,15 +218,15 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3" data-id="u1rc13hku" data-path="src/components/resume-builder/ResumeEditor.tsx">
-                <div className="space-y-2" data-id="eu8ht94hv" data-path="src/components/resume-builder/ResumeEditor.tsx">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                <div className="space-y-2">
                   <Label>Start Date</Label>
                   <Input
                   value={exp.startDate}
                   onChange={(e) => updateExperience(index, "startDate", e.target.value)} />
 
                 </div>
-                <div className="space-y-2" data-id="1boemtgdl" data-path="src/components/resume-builder/ResumeEditor.tsx">
+                <div className="space-y-2">
                   <Label>End Date</Label>
                   <Input
                   value={exp.endDate}
@@ -235,7 +235,7 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 </div>
               </div>
               
-              <div className="space-y-2" data-id="erixr3wza" data-path="src/components/resume-builder/ResumeEditor.tsx">
+              <div className="space-y-2">
                 <Label>Description</Label>
                 <Textarea
                 value={exp.description}
@@ -251,8 +251,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
           )}
           
           {resumeData.experience.length === 0 &&
-          <div className="text-center py-4 text-gray-500" data-id="o2sg64mn3" data-path="src/components/resume-builder/ResumeEditor.tsx">
-              <p data-id="oavb3wte4" data-path="src/components/resume-builder/ResumeEditor.tsx">No experience added yet. Click "Add" to add your work experience.</p>
+          <div className="text-center py-4 text-gray-500">
+              <p>No experience added yet. Click "Add" to add your work experience.</p>
             </div>
           }
         </CardContent>
@@ -260,8 +260,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
       
       <Card>
         <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-4" data-id="a2u7tmeez" data-path="src/components/resume-builder/ResumeEditor.tsx">
-            <h3 className="text-xl font-semibold" data-id="2ol7s4r5a" data-path="src/components/resume-builder/ResumeEditor.tsx">Education</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold">Education</h3>
             <Button
               variant="outline"
               size="sm"
@@ -273,9 +273,9 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
           </div>
           
           {resumeData.education.map((edu, index) =>
-          <div key={edu.id} className="mb-6" data-id="r5wec9wwu" data-path="src/components/resume-builder/ResumeEditor.tsx">
-              <div className="flex justify-between items-start mb-3" data-id="5x3lhkj0i" data-path="src/components/resume-builder/ResumeEditor.tsx">
-                <h4 className="font-medium" data-id="falgbsyz9" data-path="src/components/resume-builder/ResumeEditor.tsx">Education {index + 1}</h4>
+          <div key={edu.id} className="mb-6">
+              <div className="flex justify-between items-start mb-3">
+                <h4 className="font-medium">Education {index + 1}</h4>
                 <Button
                 variant="ghost"
                 size="sm"
@@ -286,15 +286,15 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 </Button>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3" data-id="58exw10xj" data-path="src/components/resume-builder/ResumeEditor.tsx">
-                <div className="space-y-2" data-id="65v8zjszp" data-path="src/components/resume-builder/ResumeEditor.tsx">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                <div className="space-y-2">
                   <Label>School/University</Label>
                   <Input
                   value={edu.school}
                   onChange={(e) => updateEducation(index, "school", e.target.value)} />
 
                 </div>
-                <div className="space-y-2" data-id="vq9pvihm7" data-path="src/components/resume-builder/ResumeEditor.tsx">
+                <div className="space-y-2">
                   <Label>Degree</Label>
                   <Input
                   value={edu.degree}
@@ -303,7 +303,7 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 </div>
               </div>
               
-              <div className="space-y-2" data-id="6yvybr0io" data-path="src/components/resume-builder/ResumeEditor.tsx">
+              <div className="space-y-2">
                 <Label>Date</Label>
                 <Input
                 value={edu.date}
@@ -319,8 +319,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
           )}
           
           {resumeData.education.length === 0 &&
-          <div className="text-center py-4 text-gray-500" data-id="pzgoobfh3" data-path="src/components/resume-builder/ResumeEditor.tsx">
-              <p data-id="h5g5bvuly" data-path="src/components/resume-builder/ResumeEditor.tsx">No education added yet. Click "Add" to add your education.</p>
+          <div className="text-center py-4 text-gray-500">
+              <p>No education added yet. Click "Add" to add your education.</p>
             </div>
           }
         </CardContent>
@@ -328,8 +328,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
       
       <Card>
         <CardContent className="p-6">
-          <h3 className="text-xl font-semibold mb-4" data-id="chfkva4za" data-path="src/components/resume-builder/ResumeEditor.tsx">Skills</h3>
-          <div className="space-y-2" data-id="2grqlh0bv" data-path="src/components/resume-builder/ResumeEditor.tsx">
+          <h3 className="text-xl font-semibold mb-4">Skills</h3>
+          <div className="space-y-2">
             <Label htmlFor="skills">Skills (comma separated)</Label>
             <Textarea
               id="skills"

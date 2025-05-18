@@ -46,7 +46,7 @@ const DialogContent = React.forwardRef<
       {children}
       <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
         <X className="h-4 w-4" />
-        <span className="sr-only" data-id="236l16cgk" data-path="src/components/ui/dialog.tsx">Close</span>
+        <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -62,7 +62,7 @@ const DialogHeader = ({
     "flex flex-col space-y-1.5 text-center sm:text-left",
     className
   )}
-  {...props} data-id="8mud02knd" data-path="src/components/ui/dialog.tsx" />;
+  {...props} />;
 
 
 DialogHeader.displayName = "DialogHeader";
@@ -76,7 +76,7 @@ const DialogFooter = ({
     "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
     className
   )}
-  {...props} data-id="76iqvyeap" data-path="src/components/ui/dialog.tsx" />;
+  {...props} />;
 
 
 DialogFooter.displayName = "DialogFooter";

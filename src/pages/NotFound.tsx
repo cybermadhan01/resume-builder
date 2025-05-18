@@ -14,7 +14,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background" data-id="44bsgb16q" data-path="src/pages/NotFound.tsx">
+    <div className="min-h-screen flex items-center justify-center bg-background">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -26,7 +26,7 @@ const NotFound = () => {
           animate={{ scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}>
 
-          <h1 className="text-8xl font-bold text-primary" data-id="7ef19woqm" data-path="src/pages/NotFound.tsx">404</h1>
+          <h1 className="text-8xl font-bold text-primary">404</h1>
         </motion.div>
 
         <motion.div
@@ -35,8 +35,8 @@ const NotFound = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="space-y-4">
 
-          <h2 className="text-2xl font-semibold tracking-tight" data-id="qqgvsbv7b" data-path="src/pages/NotFound.tsx">Page Not Found</h2>
-          <p className="text-muted-foreground" data-id="pbuj4fmmw" data-path="src/pages/NotFound.tsx">
+          <h2 className="text-2xl font-semibold tracking-tight">Page Not Found</h2>
+          <p className="text-muted-foreground">
             Sorry, the page you are looking for does not exist or has been removed.
           </p>
         </motion.div>
@@ -47,7 +47,7 @@ const NotFound = () => {
           transition={{ duration: 0.5, delay: 0.6 }}>
 
           <Button asChild variant="default" size="lg">
-            <a href="/" data-id="xm5nhzrni" data-path="src/pages/NotFound.tsx">Back to Home</a>
+            <a href="/">Back to Home</a>
           </Button>
         </motion.div>
       </motion.div>

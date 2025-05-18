@@ -52,7 +52,7 @@ const AlertDialogHeader = ({
     "flex flex-col space-y-2 text-center sm:text-left",
     className
   )}
-  {...props} data-id="bm64bq3sf" data-path="src/components/ui/alert-dialog.tsx" />;
+  {...props} />;
 
 
 AlertDialogHeader.displayName = "AlertDialogHeader";
@@ -66,7 +66,7 @@ const AlertDialogFooter = ({
     "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
     className
   )}
-  {...props} data-id="qw2df6b6z" data-path="src/components/ui/alert-dialog.tsx" />;
+  {...props} />;
 
 
 AlertDialogFooter.displayName = "AlertDialogFooter";

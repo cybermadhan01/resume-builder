@@ -153,8 +153,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           </TabsList>
 
           <TabsContent value="login" className="py-4">
-            <form onSubmit={handleLogin} className="space-y-4" data-id="twgp7ypxg" data-path="src/components/auth/AuthModal.tsx">
-              <div className="space-y-2" data-id="96oivb1zm" data-path="src/components/auth/AuthModal.tsx">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -166,7 +166,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   className="bg-gray-800 border-gray-700" />
 
               </div>
-              <div className="space-y-2" data-id="1fq34rbk5" data-path="src/components/auth/AuthModal.tsx">
+              <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -184,11 +184,11 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
 
                 {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
-              <div className="text-center" data-id="enyajtsuu" data-path="src/components/auth/AuthModal.tsx">
+              <div className="text-center">
                 <button
                   type="button"
                   onClick={() => setActiveTab('reset')}
-                  className="text-sm text-purple-400 hover:text-purple-300" data-id="k8s5gt4eh" data-path="src/components/auth/AuthModal.tsx">
+                  className="text-sm text-purple-400 hover:text-purple-300">
 
                   Forgot password?
                 </button>
@@ -197,8 +197,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
           </TabsContent>
 
           <TabsContent value="register" className="py-4">
-            <form onSubmit={handleRegister} className="space-y-4" data-id="uf04dllue" data-path="src/components/auth/AuthModal.tsx">
-              <div className="space-y-2" data-id="k5w82t1xg" data-path="src/components/auth/AuthModal.tsx">
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div className="space-y-2">
                 <Label htmlFor="register-email">Email</Label>
                 <Input
                   id="register-email"
@@ -210,7 +210,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   className="bg-gray-800 border-gray-700" />
 
               </div>
-              <div className="space-y-2" data-id="ubxom3jd0" data-path="src/components/auth/AuthModal.tsx">
+              <div className="space-y-2">
                 <Label htmlFor="register-password">Password</Label>
                 <Input
                   id="register-password"
@@ -221,7 +221,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   className="bg-gray-800 border-gray-700" />
 
               </div>
-              <div className="space-y-2" data-id="wp1b8tzhu" data-path="src/components/auth/AuthModal.tsx">
+              <div className="space-y-2">
                 <Label htmlFor="confirm-password">Confirm Password</Label>
                 <Input
                   id="confirm-password"
@@ -244,8 +244,8 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
 
           <TabsContent value="reset" className="py-4">
             {!resetToken ?
-            <form onSubmit={handleResetRequest} className="space-y-4" data-id="7o6rpwipe" data-path="src/components/auth/AuthModal.tsx">
-                <div className="space-y-2" data-id="5vzvh3m68" data-path="src/components/auth/AuthModal.tsx">
+            <form onSubmit={handleResetRequest} className="space-y-4">
+                <div className="space-y-2">
                   <Label htmlFor="reset-email">Email</Label>
                   <Input
                   id="reset-email"
@@ -264,19 +264,19 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
 
                   {isLoading ? 'Sending...' : 'Send Reset Link'}
                 </Button>
-                <div className="text-center" data-id="dbug97ask" data-path="src/components/auth/AuthModal.tsx">
+                <div className="text-center">
                   <button
                   type="button"
                   onClick={() => setActiveTab('login')}
-                  className="text-sm text-purple-400 hover:text-purple-300" data-id="jisea91zg" data-path="src/components/auth/AuthModal.tsx">
+                  className="text-sm text-purple-400 hover:text-purple-300">
 
                     Back to Login
                   </button>
                 </div>
               </form> :
 
-            <form onSubmit={handleResetPassword} className="space-y-4" data-id="nnn6da42j" data-path="src/components/auth/AuthModal.tsx">
-                <div className="space-y-2" data-id="qno0aouaz" data-path="src/components/auth/AuthModal.tsx">
+            <form onSubmit={handleResetPassword} className="space-y-4">
+                <div className="space-y-2">
                   <Label htmlFor="reset-token">Reset Token</Label>
                   <Input
                   id="reset-token"
@@ -287,7 +287,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   className="bg-gray-800 border-gray-700" />
 
                 </div>
-                <div className="space-y-2" data-id="8gd74tjuw" data-path="src/components/auth/AuthModal.tsx">
+                <div className="space-y-2">
                   <Label htmlFor="new-password">New Password</Label>
                   <Input
                   id="new-password"
@@ -298,7 +298,7 @@ const AuthModal = ({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) =>
                   className="bg-gray-800 border-gray-700" />
 
                 </div>
-                <div className="space-y-2" data-id="2bh7c3h0b" data-path="src/components/auth/AuthModal.tsx">
+                <div className="space-y-2">
                   <Label htmlFor="confirm-new-password">Confirm New Password</Label>
                   <Input
                   id="confirm-new-password"

@@ -29,7 +29,7 @@ export interface BadgeProps extends
 
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} data-id="unb5fchmy" data-path="src/components/ui/badge.tsx" />);
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />);
 
 }
 

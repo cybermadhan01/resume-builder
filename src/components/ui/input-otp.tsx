@@ -24,7 +24,7 @@ const InputOTPGroup = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">>(
   ({ className, ...props }, ref) =>
-  <div ref={ref} className={cn("flex items-center", className)} {...props} data-id="kjffyymsg" data-path="src/components/ui/input-otp.tsx" />
+  <div ref={ref} className={cn("flex items-center", className)} {...props} />
 );
 InputOTPGroup.displayName = "InputOTPGroup";
 
@@ -43,12 +43,12 @@ const InputOTPSlot = React.forwardRef<
           isActive && "z-10 ring-1 ring-ring",
           className
         )}
-        {...props} data-id="7jtx7ljci" data-path="src/components/ui/input-otp.tsx">
+        {...props}>
 
       {char}
       {hasFakeCaret &&
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center" data-id="47ouvj2qw" data-path="src/components/ui/input-otp.tsx">
-          <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" data-id="2xoz55beq" data-path="src/components/ui/input-otp.tsx" />
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
         </div>
         }
     </div>);
@@ -60,7 +60,7 @@ const InputOTPSeparator = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div">>(
   ({ ...props }, ref) =>
-  <div ref={ref} role="separator" {...props} data-id="ptbik8hmd" data-path="src/components/ui/input-otp.tsx">
+  <div ref={ref} role="separator" {...props}>
     <Minus />
   </div>
 );
