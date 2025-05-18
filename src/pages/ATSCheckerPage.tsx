@@ -94,49 +94,49 @@ University of Technology, 2017
 const performATSScoring = (resumeText: string, jobDescription: string): ScoringResult => {
   // This is a simplified mock implementation of ATS scoring logic
   // In a real application, this would be more sophisticated
-  
+
   // Extract keywords from job description
   const jobKeywords = [
-    "React", "Node.js", "full stack", "MongoDB", "Express", "RESTful APIs", 
-    "JavaScript", "AWS", "frontend", "backend", "development", "web applications"
-  ];
-  
+  "React", "Node.js", "full stack", "MongoDB", "Express", "RESTful APIs",
+  "JavaScript", "AWS", "frontend", "backend", "development", "web applications"];
+
+
   // Check which keywords appear in the resume
-  const matches = jobKeywords.filter(keyword => 
-    resumeText.toLowerCase().includes(keyword.toLowerCase())
+  const matches = jobKeywords.filter((keyword) =>
+  resumeText.toLowerCase().includes(keyword.toLowerCase())
   );
-  const missing = jobKeywords.filter(keyword => 
-    !resumeText.toLowerCase().includes(keyword.toLowerCase())
+  const missing = jobKeywords.filter((keyword) =>
+  !resumeText.toLowerCase().includes(keyword.toLowerCase())
   );
-  
+
   // Calculate keyword match score
-  const keywordMatchScore = Math.round((matches.length / jobKeywords.length) * 100);
-  
+  const keywordMatchScore = Math.round(matches.length / jobKeywords.length * 100);
+
   // Score for format (mock logic)
   const formatScore = 85; // Would be based on proper sections, formatting, etc.
-  
+
   // Score for content quality (mock logic)
   const contentScore = 78; // Would be based on content quality, length, specificity
-  
+
   // Calculate overall score
-  const overallScore = Math.round((keywordMatchScore * 0.5) + (formatScore * 0.3) + (contentScore * 0.2));
-  
+  const overallScore = Math.round(keywordMatchScore * 0.5 + formatScore * 0.3 + contentScore * 0.2);
+
   // Generate recommendations
   const recommendations = [];
-  
+
   if (missing.length > 0) {
     recommendations.push(`Add missing keywords: ${missing.join(", ")}`);
   }
-  
+
   if (formatScore < 90) {
     recommendations.push("Improve resume structure with clear section headings (Experience, Skills, Education, etc.)");
   }
-  
+
   if (contentScore < 85) {
     recommendations.push("Use more quantifiable achievements and specific examples in your experience descriptions");
     recommendations.push("Ensure your most relevant skills are prominently displayed");
   }
-  
+
   return {
     overallScore,
     keywordMatch: {
@@ -154,18 +154,18 @@ const ATSCheckerPage = () => {
   const [jobDescription, setJobDescription] = useState(mockJobDescription);
   const [resumeText, setResumeText] = useState(mockResumeText);
   const [scoreResult, setScoreResult] = useState<ScoringResult | null>(null);
-  
+
   const handleScore = () => {
     const result = performATSScoring(resumeText, jobDescription);
     setScoreResult(result);
   };
-  
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-600";
     if (score >= 60) return "text-amber-600";
     return "text-red-600";
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
@@ -193,12 +193,12 @@ const ATSCheckerPage = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Textarea 
-                      placeholder="Paste job description here..." 
+                    <Textarea
+                      placeholder="Paste job description here..."
                       className="min-h-[300px]"
                       value={jobDescription}
-                      onChange={(e) => setJobDescription(e.target.value)}
-                    />
+                      onChange={(e) => setJobDescription(e.target.value)} />
+
                   </CardContent>
                 </Card>
                 
@@ -219,12 +219,12 @@ const ATSCheckerPage = () => {
                         <span className="text-sm text-gray-500">or paste below</span>
                       </div>
                       
-                      <Textarea 
-                        placeholder="Paste your resume text here..." 
+                      <Textarea
+                        placeholder="Paste your resume text here..."
                         className="min-h-[300px]"
                         value={resumeText}
-                        onChange={(e) => setResumeText(e.target.value)}
-                      />
+                        onChange={(e) => setResumeText(e.target.value)} />
+
                     </div>
                   </CardContent>
                   <CardFooter className="flex justify-end">
@@ -235,8 +235,8 @@ const ATSCheckerPage = () => {
             </TabsContent>
             
             <TabsContent value="results" className="space-y-6">
-              {scoreResult && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {scoreResult &&
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2 space-y-6">
                     <Card>
                       <CardHeader>
@@ -298,26 +298,26 @@ const ATSCheckerPage = () => {
                           <div className="space-y-3">
                             <Label className="text-sm text-gray-600">Keywords Found</Label>
                             <div className="flex flex-wrap gap-2">
-                              {scoreResult.keywordMatch.matches.map((keyword, index) => (
-                                <Badge key={index} variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                              {scoreResult.keywordMatch.matches.map((keyword, index) =>
+                            <Badge key={index} variant="outline" className="bg-green-50 text-green-700 border-green-200">
                                   <CheckCircle className="mr-1 h-3 w-3" /> {keyword}
                                 </Badge>
-                              ))}
+                            )}
                             </div>
                           </div>
                           
-                          {scoreResult.keywordMatch.missing.length > 0 && (
-                            <div className="space-y-3">
+                          {scoreResult.keywordMatch.missing.length > 0 &&
+                        <div className="space-y-3">
                               <Label className="text-sm text-gray-600">Missing Keywords</Label>
                               <div className="flex flex-wrap gap-2">
-                                {scoreResult.keywordMatch.missing.map((keyword, index) => (
-                                  <Badge key={index} variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                                {scoreResult.keywordMatch.missing.map((keyword, index) =>
+                            <Badge key={index} variant="outline" className="bg-red-50 text-red-700 border-red-200">
                                     <AlertCircle className="mr-1 h-3 w-3" /> {keyword}
                                   </Badge>
-                                ))}
+                            )}
                               </div>
                             </div>
-                          )}
+                        }
                         </div>
                       </CardContent>
                     </Card>
@@ -332,32 +332,32 @@ const ATSCheckerPage = () => {
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        {scoreResult.recommendations.length > 0 ? (
-                          scoreResult.recommendations.map((recommendation, index) => (
-                            <Alert key={index} className="text-sm">
+                        {scoreResult.recommendations.length > 0 ?
+                      scoreResult.recommendations.map((recommendation, index) =>
+                      <Alert key={index} className="text-sm">
                               <AlertDescription>{recommendation}</AlertDescription>
                             </Alert>
-                          ))
-                        ) : (
-                          <Alert className="bg-green-50 text-green-700 border-green-200">
+                      ) :
+
+                      <Alert className="bg-green-50 text-green-700 border-green-200">
                             <CheckCircle className="h-4 w-4 mr-2" />
                             <AlertTitle>Great job!</AlertTitle>
                             <AlertDescription>
                               Your resume is well-optimized for this job description.
                             </AlertDescription>
                           </Alert>
-                        )}
+                      }
                       </CardContent>
                     </Card>
                   </div>
                 </div>
-              )}
+              }
             </TabsContent>
           </Tabs>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ATSCheckerPage;

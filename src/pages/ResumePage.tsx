@@ -22,45 +22,45 @@ const DEFAULT_RESUME_DATA: ResumeData = {
     summary: "Experienced software engineer with a passion for creating innovative solutions."
   },
   experience: [
-    {
-      id: "exp1",
-      company: "Tech Solutions Inc.",
-      position: "Senior Software Engineer",
-      startDate: "Jan 2020",
-      endDate: "Present",
-      description: "Led development of cloud-based applications using React and Node.js. Improved system performance by 40%."
-    },
-    {
-      id: "exp2",
-      company: "Digital Innovations",
-      position: "Software Developer",
-      startDate: "Mar 2017",
-      endDate: "Dec 2019",
-      description: "Developed and maintained web applications. Collaborated with UX designers to implement user-friendly interfaces."
-    }
-  ],
+  {
+    id: "exp1",
+    company: "Tech Solutions Inc.",
+    position: "Senior Software Engineer",
+    startDate: "Jan 2020",
+    endDate: "Present",
+    description: "Led development of cloud-based applications using React and Node.js. Improved system performance by 40%."
+  },
+  {
+    id: "exp2",
+    company: "Digital Innovations",
+    position: "Software Developer",
+    startDate: "Mar 2017",
+    endDate: "Dec 2019",
+    description: "Developed and maintained web applications. Collaborated with UX designers to implement user-friendly interfaces."
+  }],
+
   education: [
-    {
-      id: "edu1",
-      school: "University of Technology",
-      degree: "Master of Computer Science",
-      date: "2015 - 2017"
-    },
-    {
-      id: "edu2",
-      school: "State University",
-      degree: "Bachelor of Science in Software Engineering",
-      date: "2011 - 2015"
-    }
-  ],
+  {
+    id: "edu1",
+    school: "University of Technology",
+    degree: "Master of Computer Science",
+    date: "2015 - 2017"
+  },
+  {
+    id: "edu2",
+    school: "State University",
+    degree: "Bachelor of Science in Software Engineering",
+    date: "2011 - 2015"
+  }],
+
   skills: ["JavaScript", "React", "Node.js", "TypeScript", "MongoDB", "Express", "REST APIs", "Git", "Agile Methodologies"]
 };
 
 const TEMPLATES = [
-  { id: "basic", name: "Basic", component: BasicTemplate },
-  { id: "modern", name: "Modern", component: ModernTemplate },
-  { id: "professional", name: "Professional", component: ProfessionalTemplate }
-];
+{ id: "basic", name: "Basic", component: BasicTemplate },
+{ id: "modern", name: "Modern", component: ModernTemplate },
+{ id: "professional", name: "Professional", component: ProfessionalTemplate }];
+
 
 const ResumePage = () => {
   const [resumeData, setResumeData] = useState<ResumeData>(DEFAULT_RESUME_DATA);
@@ -74,7 +74,7 @@ const ResumePage = () => {
   };
 
   const handleResumeDataUpdate = (data: Partial<ResumeData>) => {
-    setResumeData(prevData => ({
+    setResumeData((prevData) => ({
       ...prevData,
       ...data
     }));
@@ -85,7 +85,7 @@ const ResumePage = () => {
     // For now, we'll just show a toast notification
     toast({
       title: "Resume Downloaded",
-      description: "Your resume has been successfully downloaded as a PDF.",
+      description: "Your resume has been successfully downloaded as a PDF."
     });
   };
 
@@ -93,7 +93,7 @@ const ResumePage = () => {
     navigate("/ats-checker");
   };
 
-  const SelectedTemplateComponent = TEMPLATES.find(t => t.id === selectedTemplate)?.component || BasicTemplate;
+  const SelectedTemplateComponent = TEMPLATES.find((t) => t.id === selectedTemplate)?.component || BasicTemplate;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -109,14 +109,14 @@ const ResumePage = () => {
             <TabsContent value="templates" className="space-y-6">
               <h2 className="text-2xl font-bold">Choose a Template</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {TEMPLATES.map((template) => (
-                  <Card 
-                    key={template.id} 
-                    className={`cursor-pointer hover:shadow-lg transition-shadow ${
-                      selectedTemplate === template.id ? "ring-2 ring-primary" : ""
-                    }`}
-                    onClick={() => handleTemplateSelect(template.id)}
-                  >
+                {TEMPLATES.map((template) =>
+                <Card
+                  key={template.id}
+                  className={`cursor-pointer hover:shadow-lg transition-shadow ${
+                  selectedTemplate === template.id ? "ring-2 ring-primary" : ""}`
+                  }
+                  onClick={() => handleTemplateSelect(template.id)}>
+
                     <CardContent className="p-4">
                       <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden">
                         <template.component resumeData={resumeData} preview={true} />
@@ -124,7 +124,7 @@ const ResumePage = () => {
                       <h3 className="mt-3 text-center font-medium">{template.name}</h3>
                     </CardContent>
                   </Card>
-                ))}
+                )}
               </div>
               <div className="flex justify-end mt-6">
                 <Button onClick={() => setSection("editor")}>Continue to Editor</Button>
@@ -135,10 +135,10 @@ const ResumePage = () => {
               <h2 className="text-2xl font-bold">Edit Your Resume</h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-6">
-                  <ResumeEditor 
-                    resumeData={resumeData} 
-                    onUpdate={handleResumeDataUpdate}
-                  />
+                  <ResumeEditor
+                    resumeData={resumeData}
+                    onUpdate={handleResumeDataUpdate} />
+
                 </div>
 
                 <div>
@@ -201,8 +201,8 @@ const ResumePage = () => {
           </div>
         </div>
       </Tabs>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ResumePage;

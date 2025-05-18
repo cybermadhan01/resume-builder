@@ -23,29 +23,29 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
       endDate: "",
       description: ""
     };
-    
+
     onUpdate({
       experience: [...resumeData.experience, newExperience]
     });
   };
-  
+
   const updateExperience = (index: number, field: string, value: string) => {
     const updatedExperience = [...resumeData.experience];
     updatedExperience[index] = {
       ...updatedExperience[index],
       [field]: value
     };
-    
+
     onUpdate({ experience: updatedExperience });
   };
-  
+
   const removeExperience = (index: number) => {
     const updatedExperience = [...resumeData.experience];
     updatedExperience.splice(index, 1);
-    
+
     onUpdate({ experience: updatedExperience });
   };
-  
+
   const addEducation = () => {
     const newEducation = {
       id: `edu-${Date.now()}`,
@@ -53,26 +53,26 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
       degree: "",
       date: ""
     };
-    
+
     onUpdate({
       education: [...resumeData.education, newEducation]
     });
   };
-  
+
   const updateEducation = (index: number, field: string, value: string) => {
     const updatedEducation = [...resumeData.education];
     updatedEducation[index] = {
       ...updatedEducation[index],
       [field]: value
     };
-    
+
     onUpdate({ education: updatedEducation });
   };
-  
+
   const removeEducation = (index: number) => {
     const updatedEducation = [...resumeData.education];
     updatedEducation.splice(index, 1);
-    
+
     onUpdate({ education: updatedEducation });
   };
 
@@ -93,8 +93,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                       ...resumeData.personalInfo,
                       name: e.target.value
                     }
-                  })}
-                />
+                  })} />
+
               </div>
               <div className="space-y-2">
                 <Label htmlFor="title">Job Title</Label>
@@ -106,8 +106,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                       ...resumeData.personalInfo,
                       title: e.target.value
                     }
-                  })}
-                />
+                  })} />
+
               </div>
             </div>
             
@@ -123,8 +123,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                       ...resumeData.personalInfo,
                       email: e.target.value
                     }
-                  })}
-                />
+                  })} />
+
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
@@ -136,8 +136,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                       ...resumeData.personalInfo,
                       phone: e.target.value
                     }
-                  })}
-                />
+                  })} />
+
               </div>
             </div>
             
@@ -151,8 +151,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                     ...resumeData.personalInfo,
                     address: e.target.value
                   }
-                })}
-              />
+                })} />
+
             </div>
             
             <div className="space-y-2">
@@ -166,8 +166,8 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                     summary: e.target.value
                   }
                 })}
-                className="min-h-[100px]"
-              />
+                className="min-h-[100px]" />
+
             </div>
           </div>
         </CardContent>
@@ -177,26 +177,26 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
         <CardContent className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold">Experience</h3>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={addExperience}
-              className="flex items-center gap-1"
-            >
+              className="flex items-center gap-1">
+
               <Plus className="h-4 w-4" /> Add
             </Button>
           </div>
           
-          {resumeData.experience.map((exp, index) => (
-            <div key={exp.id} className="mb-6">
+          {resumeData.experience.map((exp, index) =>
+          <div key={exp.id} className="mb-6">
               <div className="flex justify-between items-start mb-3">
                 <h4 className="font-medium">Experience {index + 1}</h4>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => removeExperience(index)}
-                  className="h-8 w-8 p-0 text-red-500"
-                >
+                <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => removeExperience(index)}
+                className="h-8 w-8 p-0 text-red-500">
+
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -205,16 +205,16 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 <div className="space-y-2">
                   <Label>Company</Label>
                   <Input
-                    value={exp.company}
-                    onChange={(e) => updateExperience(index, "company", e.target.value)}
-                  />
+                  value={exp.company}
+                  onChange={(e) => updateExperience(index, "company", e.target.value)} />
+
                 </div>
                 <div className="space-y-2">
                   <Label>Position</Label>
                   <Input
-                    value={exp.position}
-                    onChange={(e) => updateExperience(index, "position", e.target.value)}
-                  />
+                  value={exp.position}
+                  onChange={(e) => updateExperience(index, "position", e.target.value)} />
+
                 </div>
               </div>
               
@@ -222,39 +222,39 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 <div className="space-y-2">
                   <Label>Start Date</Label>
                   <Input
-                    value={exp.startDate}
-                    onChange={(e) => updateExperience(index, "startDate", e.target.value)}
-                  />
+                  value={exp.startDate}
+                  onChange={(e) => updateExperience(index, "startDate", e.target.value)} />
+
                 </div>
                 <div className="space-y-2">
                   <Label>End Date</Label>
                   <Input
-                    value={exp.endDate}
-                    onChange={(e) => updateExperience(index, "endDate", e.target.value)}
-                  />
+                  value={exp.endDate}
+                  onChange={(e) => updateExperience(index, "endDate", e.target.value)} />
+
                 </div>
               </div>
               
               <div className="space-y-2">
                 <Label>Description</Label>
                 <Textarea
-                  value={exp.description}
-                  onChange={(e) => updateExperience(index, "description", e.target.value)}
-                  className="min-h-[80px]"
-                />
+                value={exp.description}
+                onChange={(e) => updateExperience(index, "description", e.target.value)}
+                className="min-h-[80px]" />
+
               </div>
               
-              {index < resumeData.experience.length - 1 && (
-                <Separator className="my-6" />
-              )}
-            </div>
-          ))}
-          
-          {resumeData.experience.length === 0 && (
-            <div className="text-center py-4 text-gray-500">
-              <p>No experience added yet. Click "Add" to add your work experience.</p>
+              {index < resumeData.experience.length - 1 &&
+            <Separator className="my-6" />
+            }
             </div>
           )}
+          
+          {resumeData.experience.length === 0 &&
+          <div className="text-center py-4 text-gray-500">
+              <p>No experience added yet. Click "Add" to add your work experience.</p>
+            </div>
+          }
         </CardContent>
       </Card>
       
@@ -262,26 +262,26 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
         <CardContent className="p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold">Education</h3>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={addEducation}
-              className="flex items-center gap-1"
-            >
+              className="flex items-center gap-1">
+
               <Plus className="h-4 w-4" /> Add
             </Button>
           </div>
           
-          {resumeData.education.map((edu, index) => (
-            <div key={edu.id} className="mb-6">
+          {resumeData.education.map((edu, index) =>
+          <div key={edu.id} className="mb-6">
               <div className="flex justify-between items-start mb-3">
                 <h4 className="font-medium">Education {index + 1}</h4>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => removeEducation(index)}
-                  className="h-8 w-8 p-0 text-red-500"
-                >
+                <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => removeEducation(index)}
+                className="h-8 w-8 p-0 text-red-500">
+
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -290,39 +290,39 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 <div className="space-y-2">
                   <Label>School/University</Label>
                   <Input
-                    value={edu.school}
-                    onChange={(e) => updateEducation(index, "school", e.target.value)}
-                  />
+                  value={edu.school}
+                  onChange={(e) => updateEducation(index, "school", e.target.value)} />
+
                 </div>
                 <div className="space-y-2">
                   <Label>Degree</Label>
                   <Input
-                    value={edu.degree}
-                    onChange={(e) => updateEducation(index, "degree", e.target.value)}
-                  />
+                  value={edu.degree}
+                  onChange={(e) => updateEducation(index, "degree", e.target.value)} />
+
                 </div>
               </div>
               
               <div className="space-y-2">
                 <Label>Date</Label>
                 <Input
-                  value={edu.date}
-                  onChange={(e) => updateEducation(index, "date", e.target.value)}
-                  placeholder="e.g., 2015 - 2019"
-                />
+                value={edu.date}
+                onChange={(e) => updateEducation(index, "date", e.target.value)}
+                placeholder="e.g., 2015 - 2019" />
+
               </div>
               
-              {index < resumeData.education.length - 1 && (
-                <Separator className="my-6" />
-              )}
-            </div>
-          ))}
-          
-          {resumeData.education.length === 0 && (
-            <div className="text-center py-4 text-gray-500">
-              <p>No education added yet. Click "Add" to add your education.</p>
+              {index < resumeData.education.length - 1 &&
+            <Separator className="my-6" />
+            }
             </div>
           )}
+          
+          {resumeData.education.length === 0 &&
+          <div className="text-center py-4 text-gray-500">
+              <p>No education added yet. Click "Add" to add your education.</p>
+            </div>
+          }
         </CardContent>
       </Card>
       
@@ -335,17 +335,17 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
               id="skills"
               value={resumeData.skills.join(", ")}
               onChange={(e) => {
-                const skills = e.target.value.split(",").map(skill => skill.trim()).filter(Boolean);
+                const skills = e.target.value.split(",").map((skill) => skill.trim()).filter(Boolean);
                 onUpdate({ skills });
               }}
               className="min-h-[100px]"
-              placeholder="e.g., JavaScript, React, Node.js, Project Management"
-            />
+              placeholder="e.g., JavaScript, React, Node.js, Project Management" />
+
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ResumeEditor;

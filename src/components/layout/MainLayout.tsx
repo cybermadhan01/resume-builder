@@ -17,8 +17,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <p>© {new Date().getFullYear()} ATSResume. All rights reserved.</p>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
+
 };
 
 export default MainLayout;

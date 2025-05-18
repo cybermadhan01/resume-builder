@@ -1,205 +1,265 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, FileText, CheckSquare, Download, BarChart } from "lucide-react";
+import { ArrowRight, FileText, CheckSquare, Star, Sparkles, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
+import AuthModal from "@/components/auth/AuthModal";
+
+const resumeTemplates = [
+  {
+    id: 1,
+    title: "Basic Clean",
+    description: "A clean, straightforward design perfect for most industries",
+    thumbnail: "/placeholder.svg",
+    ratings: 4.8,
+    downloads: 1234
+  },
+  {
+    id: 2,
+    title: "Modern Professional",
+    description: "A contemporary design with stylish elements for creative fields",
+    thumbnail: "/placeholder.svg",
+    ratings: 4.9,
+    downloads: 982
+  },
+  {
+    id: 3,
+    title: "Executive Elite",
+    description: "An elegant, sophisticated layout for senior positions",
+    thumbnail: "/placeholder.svg",
+    ratings: 4.7,
+    downloads: 756
+  },
+  {
+    id: 4,
+    title: "Tech Innovator",
+    description: "A cutting-edge design for tech professionals and developers",
+    thumbnail: "/placeholder.svg",
+    ratings: 4.9,
+    downloads: 842
+  }
+];
 
 const features = [
   {
-    icon: <FileText className="h-12 w-12 text-blue-600" />,
-    title: "Modern Resume Templates",
-    description: "Choose from a variety of professionally designed templates optimized for ATS compatibility.",
+    icon: <Sparkles className="h-10 w-10 text-purple-500" />,
+    title: "ATS-Optimized Templates",
+    description: "Our templates are designed to pass through ATS systems with ease"
   },
   {
-    icon: <CheckSquare className="h-12 w-12 text-green-600" />,
-    title: "ATS Score Checker",
-    description: "Test your resume against ATS algorithms and get actionable feedback to improve your chances.",
+    icon: <Star className="h-10 w-10 text-pink-500" />,
+    title: "AI-Powered Suggestions",
+    description: "Get smart content recommendations based on your field and experience"
   },
   {
-    icon: <BarChart className="h-12 w-12 text-purple-600" />,
+    icon: <TrendingUp className="h-10 w-10 text-indigo-500" />,
     title: "Job Match Analysis",
-    description: "Analyze your resume against job descriptions to identify missing keywords and improvement areas.",
-  },
-  {
-    icon: <Download className="h-12 w-12 text-amber-600" />,
-    title: "Export Options",
-    description: "Download your finished resume in multiple formats including PDF and image files.",
-  },
-];
-
-const testimonials = [
-  {
-    quote: "This tool helped me optimize my resume and land interviews at top tech companies. The ATS checker was a game-changer!",
-    author: "Sarah J.",
-    role: "Software Engineer"
-  },
-  {
-    quote: "After using the resume builder and ATS checker, my interview callback rate increased by 60%. Highly recommended!",
-    author: "Michael T.",
-    role: "Marketing Manager"
-  },
-  {
-    quote: "The templates are not only beautiful but actually work with ATS systems. I finally got past the automated screening!",
-    author: "Alex P.",
-    role: "Project Manager"
+    description: "See how well your resume matches specific job descriptions"
   }
 ];
 
 const HomePage = () => {
+  const { isAuthenticated } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="container mx-auto px-4 py-20 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Create ATS-Optimized Resumes That Get Interviews
-          </h1>
-          <p className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto">
-            Stand out from the competition with professionally designed resumes that pass through Applicant Tracking Systems
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              <Link to="/resume-builder">Create Your Resume</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-              <Link to="/ats-checker">Check ATS Score</Link>
-            </Button>
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 to-black z-0"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">Discover & Create</span> <br />
+                Extraordinary Resumes
+              </h1>
+              <p className="text-xl md:text-2xl mb-10 text-gray-300">
+                Build ATS-optimized resumes that get you noticed. Stand out to employers and land your dream job.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button asChild size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-0">
+                  <Link to="/resume-builder">Create Resume</Link>
+                </Button>
+                <Button 
+                  asChild 
+                  size="lg" 
+                  variant="outline" 
+                  className="bg-black/50 backdrop-blur border-purple-500 text-white hover:bg-black/70"
+                >
+                  <Link to="/ats-checker">Check ATS Score</Link>
+                </Button>
+              </div>
+            </div>
+            <div className="lg:w-1/2 flex justify-center">
+              <div className="relative w-full max-w-md">
+                {/* Main NFT-style resume showcase */}
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-600/30 to-pink-600/30 rounded-lg blur-3xl"></div>
+                <Card className="w-full overflow-hidden rounded-lg bg-gradient-to-br from-purple-900/50 to-black border border-purple-500/50 relative z-10">
+                  <CardContent className="p-6">
+                    <img src="/placeholder.svg" alt="Resume Preview" className="w-full h-auto rounded" />
+                    <div className="mt-4">
+                      <h3 className="text-xl font-bold">Premium Resume Template</h3>
+                      <p className="text-gray-300 mt-1">Optimized for 98% ATS compatibility</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                {/* Decorative elements */}
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-pink-600 rounded-full blur-3xl opacity-20"></div>
+                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-600 rounded-full blur-3xl opacity-20"></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      {/* Trending Templates Section */}
+      <section className="py-16 bg-gray-950">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Tools for Job Seekers</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our platform provides everything you need to create professional, ATS-optimized resumes that help you land more interviews
-            </p>
+          <div className="flex items-center justify-between mb-10">
+            <h2 className="text-3xl font-bold">Trending Templates</h2>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                New
+              </Button>
+              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                Popular
+              </Button>
+              <Button variant="ghost" size="sm" className="text-white bg-gray-800">
+                Featured
+              </Button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-none shadow-lg">
-                <CardHeader className="pb-2 text-center">
-                  <div className="mx-auto">{feature.icon}</div>
-                  <CardTitle className="mt-4">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 text-center">{feature.description}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {resumeTemplates.map((template) => (
+              <Card key={template.id} className="bg-gray-900 border-gray-800 hover:border-purple-500 transition-all overflow-hidden">
+                <div className="relative">
+                  <img src={template.thumbnail} alt={template.title} className="w-full h-48 object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
+                </div>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="font-bold">{template.title}</h3>
+                    <div className="flex items-center text-sm text-yellow-500">
+                      <Star className="h-4 w-4 mr-1 fill-current" />
+                      {template.ratings}
+                    </div>
+                  </div>
+                  <p className="text-gray-400 text-sm mb-4">{template.description}</p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">{template.downloads} downloads</span>
+                    <Button 
+                      size="sm" 
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-0"
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          setAuthModalOpen(true);
+                          return;
+                        }
+                        // Navigate to resume builder with this template
+                      }}
+                    >
+                      Use Template
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
+
+          <div className="text-center mt-8">
+            <Button variant="link" className="text-purple-400 hover:text-purple-300">
+              View all templates <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* Start Your Journey Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Create professional, ATS-optimized resumes in just a few simple steps
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-              <h3 className="text-xl font-bold mb-2">Choose a Template</h3>
-              <p className="text-gray-600">Select from our collection of ATS-optimized resume templates</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h3 className="text-xl font-bold mb-2">Add Your Content</h3>
-              <p className="text-gray-600">Fill in your details, experience, and skills with our easy-to-use editor</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h3 className="text-xl font-bold mb-2">Check & Export</h3>
-              <p className="text-gray-600">Analyze your resume's ATS score and download in your preferred format</p>
-            </div>
-          </div>
-
-          <div className="text-center mt-12">
-            <Button asChild size="lg" className="bg-blue-600">
-              <Link to="/resume-builder" className="flex items-center gap-2">
-                Get Started Now <ArrowRight className="h-5 w-5" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">What Our Users Say</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Thousands of job seekers have used our tools to improve their resumes and get more interviews
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-white">
-                <CardContent className="pt-6">
-                  <div className="mb-4 text-amber-500">
-                    {"★".repeat(5)}
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="lg:w-1/2">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Start Your Resume Journey Today
+              </h2>
+              <p className="text-gray-300 mb-8">
+                Our AI-powered resume builder helps you create professional, ATS-optimized resumes in minutes. Get personalized suggestions and expert feedback to make your application stand out.
+              </p>
+              <div className="space-y-6">
+                {features.map((feature, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="mt-1 bg-gradient-to-br from-purple-900 to-pink-900 p-3 rounded-lg">
+                      {feature.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">{feature.title}</h3>
+                      <p className="text-gray-400">{feature.description}</p>
+                    </div>
                   </div>
-                  <p className="italic text-gray-700 mb-6">"{testimonial.quote}"</p>
-                  <div>
-                    <p className="font-semibold">{testimonial.author}</p>
-                    <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-blue-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Land Your Next Job?</h2>
-          <p className="text-xl mb-10 max-w-2xl mx-auto">
-            Create an ATS-optimized resume today and increase your chances of getting interviews
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              <Link to="/resume-builder">Create Your Resume</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-              <Link to="/ats-checker">Check ATS Score</Link>
-            </Button>
+                ))}
+              </div>
+              <div className="mt-10">
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-0"
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      setAuthModalOpen(true);
+                      return;
+                    }
+                    // Navigate to the resume builder
+                  }}
+                >
+                  Create Your Resume
+                </Button>
+              </div>
+            </div>
+            <div className="lg:w-1/2">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-lg blur-3xl"></div>
+                <img 
+                  src="/placeholder.svg" 
+                  alt="Resume Builder Interface" 
+                  className="relative z-10 rounded-lg border border-purple-500/50"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-12">
+      <footer className="border-t border-gray-800 py-12">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-6 md:mb-0">
               <h2 className="font-bold text-xl flex items-center">
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">ATS</span>Resume
+                <span className="bg-gradient-to-r from-purple-400 to-pink-600 text-transparent bg-clip-text">ATS</span>
+                <span className="text-white">Resume</span>
               </h2>
-              <p className="text-gray-600 mt-2">Create professional, ATS-optimized resumes</p>
+              <p className="text-gray-400 mt-2">Create professional, ATS-optimized resumes</p>
             </div>
             <div className="flex gap-8">
-              <Link to="#" className="text-gray-600 hover:text-blue-600">About</Link>
-              <Link to="#" className="text-gray-600 hover:text-blue-600">Privacy</Link>
-              <Link to="#" className="text-gray-600 hover:text-blue-600">Terms</Link>
-              <Link to="#" className="text-gray-600 hover:text-blue-600">Contact</Link>
+              <Link to="#" className="text-gray-400 hover:text-purple-400">About</Link>
+              <Link to="#" className="text-gray-400 hover:text-purple-400">Privacy</Link>
+              <Link to="#" className="text-gray-400 hover:text-purple-400">Terms</Link>
+              <Link to="#" className="text-gray-400 hover:text-purple-400">Contact</Link>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t text-center text-gray-500">
+          <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
             <p>© {new Date().getFullYear()} ATSResume. All rights reserved.</p>
           </div>
         </div>
       </footer>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={authModalOpen} 
+        onClose={() => setAuthModalOpen(false)} 
+      />
     </div>
   );
 };
