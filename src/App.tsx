@@ -12,6 +12,8 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
 import CookiesPolicyPage from "./pages/CookiesPolicyPage";
 import GDPRCompliancePage from "./pages/GDPRCompliancePage";
+import ProfilePage from "./pages/ProfilePage";
+import HistoryPage from "./pages/HistoryPage";
 import MainNavbar from "./components/navigation/MainNavbar";
 import { AuthProvider } from "./contexts/AuthContext";
 import MainLayout from "./components/layout/MainLayout";
@@ -27,7 +29,7 @@ const App = () =>
           <MainLayout>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/resume-builder" element={<ResumePage />} />
+              <Route path="/resume" element={<ResumePage />} />
               <Route path="/ats-checker" element={<ATSCheckerPage />} />
               <Route path="/resetpassword" element={<ResetPasswordPage />} />
               <Route path="/onauthsuccess" element={<AuthSuccessPage />} />
@@ -35,6 +37,8 @@ const App = () =>
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/cookies" element={<CookiesPolicyPage />} />
               <Route path="/gdpr" element={<GDPRCompliancePage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/history" element={<HistoryPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

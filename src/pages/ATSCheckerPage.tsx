@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,10 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle, AlertCircle, Upload, FileText, Lightbulb } from "lucide-react";
+import { CheckCircle, AlertCircle, Upload, FileText, Lightbulb, Loader2, Save, History } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 type ScoringResult = {
   overallScore: number;
@@ -22,6 +25,16 @@ type ScoringResult = {
   contentScore: number;
   recommendations: string[];
 };
+
+interface ATSCheckRecord {
+  id: number;
+  user_id: string;
+  resume_id: string;
+  job_description: string;
+  score: number;
+  feedback: string;
+  check_date: string;
+}
 
 const mockJobDescription = `
 Senior Full Stack Developer
@@ -154,23 +167,209 @@ const ATSCheckerPage = () => {
   const [jobDescription, setJobDescription] = useState(mockJobDescription);
   const [resumeText, setResumeText] = useState(mockResumeText);
   const [scoreResult, setScoreResult] = useState<ScoringResult | null>(null);
+  const [currentCheckId, setCurrentCheckId] = useState<number | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("input");
   const resultsRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const checkId = searchParams.get('id');
+
+  useEffect(() => {
+    if (checkId) {
+      loadATSCheck(Number(checkId));
+    }
+  }, [checkId]);
+
+  const loadATSCheck = async (id: number) => {
+    try {
+      setIsLoading(true);
+      
+      const response = await window.ezsite.apis.tablePage(6626, {
+        PageNo: 1,
+        PageSize: 1,
+        Filters: [
+          {
+            name: "id",
+            op: "Equal",
+            value: id
+          }
+        ]
+      });
+      
+      if (response.error) throw response.error;
+      
+      if (response.data.List && response.data.List.length > 0) {
+        const check = response.data.List[0] as ATSCheckRecord;
+        
+        setJobDescription(check.job_description);
+        
+        // Parse the feedback JSON to get the full scoring result
+        const feedbackData = JSON.parse(check.feedback);
+        setScoreResult(feedbackData);
+        setCurrentCheckId(check.id);
+        
+        // Switch to results tab
+        setActiveTab("results");
+        
+        toast({
+          title: "ATS Check Loaded",
+          description: `Successfully loaded ATS check #${check.id}`
+        });
+      } else {
+        toast({
+          title: "ATS Check Not Found",
+          description: "The requested ATS check could not be found.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error loading ATS check:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load ATS check. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleScore = () => {
     const result = performATSScoring(resumeText, jobDescription);
     setScoreResult(result);
+    setActiveTab("results");
 
-    // Automatically switch to results tab and scroll to it
+    // Scroll to the results section
     setTimeout(() => {
-      document.querySelector('[value="results"]')?.dispatchEvent(
-        new MouseEvent('click', { bubbles: true })
-      );
-      // Scroll to the results section with a slight delay to ensure tab switch is complete
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 200);
-    }, 300);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
+  const saveATSCheck = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Login Required",
+        description: "Please log in to save your ATS check.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!scoreResult) {
+      toast({
+        title: "No Results",
+        description: "Please analyze a resume first.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      setIsSaving(true);
+      
+      // Stringify the score result for storage
+      const feedbackJson = JSON.stringify(scoreResult);
+      
+      if (currentCheckId) {
+        // Update existing check
+        const updateData = {
+          id: currentCheckId,
+          user_id: user?.ID,
+          job_description: jobDescription,
+          score: scoreResult.overallScore,
+          feedback: feedbackJson,
+          check_date: new Date().toISOString()
+        };
+        
+        const updateResponse = await window.ezsite.apis.tableUpdate(6626, updateData);
+        if (updateResponse.error) throw updateResponse.error;
+        
+        toast({
+          title: "ATS Check Updated",
+          description: "Your ATS check has been successfully updated."
+        });
+      } else {
+        // Create new check
+        const newCheck = {
+          user_id: user?.ID,
+          resume_id: "",  // Optional, could link to a specific resume
+          job_description: jobDescription,
+          score: scoreResult.overallScore,
+          feedback: feedbackJson,
+          check_date: new Date().toISOString()
+        };
+        
+        const createResponse = await window.ezsite.apis.tableCreate(6626, newCheck);
+        if (createResponse.error) throw createResponse.error;
+        
+        // Update user activity
+        try {
+          const activityResponse = await window.ezsite.apis.tablePage(7227, {
+            PageNo: 1,
+            PageSize: 1,
+            Filters: [
+              {
+                name: "user_id",
+                op: "Equal",
+                value: user?.ID
+              }
+            ]
+          });
+          
+          if (activityResponse.error) throw activityResponse.error;
+          
+          if (activityResponse.data.List && activityResponse.data.List.length > 0) {
+            const activity = activityResponse.data.List[0];
+            await window.ezsite.apis.tableUpdate(7227, {
+              id: activity.id,
+              user_id: user?.ID,
+              ats_check_count: (activity.ats_check_count || 0) + 1,
+              last_active: new Date().toISOString()
+            });
+          }
+        } catch (activityError) {
+          console.error('Error updating activity:', activityError);
+        }
+        
+        // Get the created check to set current ID
+        const getCreatedResponse = await window.ezsite.apis.tablePage(6626, {
+          PageNo: 1,
+          PageSize: 1,
+          OrderByField: "check_date",
+          IsAsc: false,
+          Filters: [
+            {
+              name: "user_id",
+              op: "Equal",
+              value: user?.ID
+            }
+          ]
+        });
+        
+        if (getCreatedResponse.data.List && getCreatedResponse.data.List.length > 0) {
+          setCurrentCheckId(getCreatedResponse.data.List[0].id);
+        }
+        
+        toast({
+          title: "ATS Check Saved",
+          description: "Your ATS check has been successfully saved."
+        });
+      }
+    } catch (error) {
+      console.error('Error saving ATS check:', error);
+      toast({
+        title: "Save Failed",
+        description: "Failed to save ATS check. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const getScoreColor = (score: number) => {
@@ -178,6 +377,16 @@ const ATSCheckerPage = () => {
     if (score >= 60) return "text-amber-600";
     return "text-red-600";
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+        <h2 className="text-2xl font-semibold">Loading ATS Check...</h2>
+        <p className="text-muted-foreground">Please wait while we fetch your data</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 transition-all duration-300">
@@ -190,7 +399,7 @@ const ATSCheckerPage = () => {
             </p>
           </div>
           
-          <Tabs defaultValue="input" className="space-y-6 animate-in fade-in duration-300">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 animate-in fade-in duration-300">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="input">Input</TabsTrigger>
               <TabsTrigger value="results" disabled={!scoreResult}>Results</TabsTrigger>
@@ -255,7 +464,34 @@ const ATSCheckerPage = () => {
                   <div className="lg:col-span-2 space-y-6">
                     <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
                       <CardHeader>
-                        <CardTitle className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ATS Scoring Results</CardTitle>
+                        <div className="flex justify-between items-center">
+                          <CardTitle className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ATS Scoring Results</CardTitle>
+                          {isAuthenticated && (
+                            <div className="flex gap-2">
+                              <Button 
+                                onClick={saveATSCheck}
+                                disabled={isSaving}
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-1"
+                              >
+                                {isSaving ? (
+                                  <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Saving...</>
+                                ) : (
+                                  <><Save className="w-4 h-4 mr-1" /> Save Results</>
+                                )}
+                              </Button>
+                              <Button 
+                                onClick={() => navigate("/history")}
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-1"
+                              >
+                                <History className="w-4 h-4 mr-1" /> History
+                              </Button>
+                            </div>
+                          )}
+                        </div>
                         <CardDescription>
                           Here's how your resume performs against this job description
                         </CardDescription>
@@ -363,6 +599,15 @@ const ATSCheckerPage = () => {
                           </Alert>
                       }
                       </CardContent>
+                      <CardFooter>
+                        <Button 
+                          onClick={() => setActiveTab("input")} 
+                          variant="outline" 
+                          className="w-full"
+                        >
+                          Try Another Resume
+                        </Button>
+                      </CardFooter>
                     </Card>
                   </div>
                 </div>
@@ -371,7 +616,8 @@ const ATSCheckerPage = () => {
           </Tabs>
         </div>
       </div>
-    </div>);
+    </div>
+  );
 
 };
 

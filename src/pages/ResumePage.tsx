@@ -6,11 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ResumeEditor from "@/components/resume-builder/ResumeEditor";
 import { ResumeData, ExportFormat } from "@/types/resume";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import html2canvas from "html2canvas";
 import { useToast } from "@/hooks/use-toast";
-import { Download, FileText, Star, Image as ImageIcon, Eye, Search, Filter } from "lucide-react";
+import { Download, FileText, Star, Image as ImageIcon, Eye, Search, Filter, Loader2, Save } from "lucide-react";
 import { EXTENDED_TEMPLATES, TEMPLATE_CATEGORIES, TemplateData } from "@/data/resumeTemplates";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Resume templates imports
 import BasicTemplate from "@/components/resume-templates/BasicTemplate";
@@ -63,7 +64,7 @@ const DEFAULT_RESUME_DATA: ResumeData = {
 };
 
 // Map of template components
-const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: ResumeData, preview?: boolean}>} = {
+const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: ResumeData;preview?: boolean;}>} = {
   'BasicTemplate': BasicTemplate,
   'ModernTemplate': ModernTemplate,
   'ProfessionalTemplate': ProfessionalTemplate
@@ -71,54 +72,289 @@ const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: Resu
 
 // Export formats available
 const EXPORT_FORMATS: ExportFormat[] = [
-  { id: 'pdf', name: 'PDF', description: 'Portable Document Format', icon: 'FileText' },
-  { id: 'png', name: 'PNG', description: 'High-quality image format', icon: 'Image' },
-  { id: 'jpg', name: 'JPG', description: 'Compressed image format', icon: 'Image' },
-  { id: 'docx', name: 'DOCX', description: 'Microsoft Word format', icon: 'FileText' }
-];
+{ id: 'pdf', name: 'PDF', description: 'Portable Document Format', icon: 'FileText' },
+{ id: 'png', name: 'PNG', description: 'High-quality image format', icon: 'Image' },
+{ id: 'jpg', name: 'JPG', description: 'Compressed image format', icon: 'Image' },
+{ id: 'docx', name: 'DOCX', description: 'Microsoft Word format', icon: 'FileText' }];
 
+interface ResumeRecord {
+  id: number;
+  user_id: string;
+  title: string;
+  template: string;
+  content: string;
+  last_modified: string;
+  thumbnail: string;
+}
 
 const ResumePage = () => {
   const resumeRef = useRef<HTMLDivElement>(null);
   const templatesRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+  const [searchParams] = useSearchParams();
+  const resumeId = searchParams.get('id');
 
   const [resumeData, setResumeData] = useState<ResumeData>(DEFAULT_RESUME_DATA);
   const [selectedTemplate, setSelectedTemplate] = useState("basic");
   const [section, setSection] = useState("templates");
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [resumeTitle, setResumeTitle] = useState("My Resume");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(EXTENDED_TEMPLATES);
-  const [progress, setProgress] = useState<{[key: string]: boolean;}>({
+  const [progress, setProgress] = useState<{[key: string]: boolean}>({
     templateSelected: false,
     contentEdited: false
   });
+  const [currentResumeId, setCurrentResumeId] = useState<number | null>(null);
+  
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, isAuthenticated } = useAuth();
+
+  // Load resume if ID is provided
+  useEffect(() => {
+    if (resumeId) {
+      loadResume(Number(resumeId));
+    }
+  }, [resumeId]);
 
   // Filter templates based on category and search query
   useEffect(() => {
     let templates = [...EXTENDED_TEMPLATES];
-    
+
     // Filter by category
     if (selectedCategory !== 'all') {
-      templates = templates.filter(t => t.category === selectedCategory);
+      templates = templates.filter((t) => t.category === selectedCategory);
     }
-    
+
     // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      templates = templates.filter(t => 
-        t.name.toLowerCase().includes(query) || 
-        t.displayName.toLowerCase().includes(query) ||
-        (t.description && t.description.toLowerCase().includes(query))
+      templates = templates.filter((t) =>
+      t.name.toLowerCase().includes(query) ||
+      t.displayName.toLowerCase().includes(query) ||
+      t.description && t.description.toLowerCase().includes(query)
       );
     }
-    
+
     setFilteredTemplates(templates);
   }, [selectedCategory, searchQuery]);
+
+  const loadResume = async (id: number) => {
+    try {
+      setIsLoading(true);
+      
+      const response = await window.ezsite.apis.tablePage(6625, {
+        PageNo: 1,
+        PageSize: 1,
+        Filters: [
+          {
+            name: "id",
+            op: "Equal",
+            value: id
+          }
+        ]
+      });
+      
+      if (response.error) throw response.error;
+      
+      if (response.data.List && response.data.List.length > 0) {
+        const resumeRecord = response.data.List[0] as ResumeRecord;
+        
+        // Parse the resume content
+        const content = JSON.parse(resumeRecord.content);
+        
+        setResumeData(content);
+        setSelectedTemplate(resumeRecord.template);
+        setResumeTitle(resumeRecord.title);
+        setCurrentResumeId(resumeRecord.id);
+        
+        // Set progress states
+        setProgress({
+          templateSelected: true,
+          contentEdited: true
+        });
+        
+        // If loading an existing resume, go straight to editor
+        setSection("editor");
+        
+        toast({
+          title: "Resume Loaded",
+          description: `Successfully loaded "${resumeRecord.title}"`
+        });
+      } else {
+        toast({
+          title: "Resume Not Found",
+          description: "The requested resume could not be found.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error loading resume:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load resume. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveResume = async () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Login Required",
+        description: "Please log in to save your resume.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      setIsSaving(true);
+      
+      // Generate a thumbnail
+      let thumbnailId = "";
+      if (resumeRef.current) {
+        try {
+          const canvas = await html2canvas(resumeRef.current, { 
+            scale: 0.5, 
+            useCORS: true,
+            logging: false,
+            backgroundColor: "#ffffff"
+          });
+          
+          const blob = await new Promise<Blob>((resolve) => {
+            canvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+            }, 'image/jpeg', 0.7);
+          });
+          
+          // Create a File from the Blob
+          const file = new File([blob], `resume_thumbnail_${Date.now()}.jpg`, { type: 'image/jpeg' });
+          
+          // Upload the file
+          const uploadResponse = await window.ezsite.apis.upload({
+            filename: file.name,
+            file: file
+          });
+          
+          if (uploadResponse.error) throw uploadResponse.error;
+          thumbnailId = uploadResponse.data.toString();
+        } catch (error) {
+          console.error('Error creating thumbnail:', error);
+        }
+      }
+      
+      // Create or update the resume record
+      const resumeContent = JSON.stringify(resumeData);
+      
+      if (currentResumeId) {
+        // Update existing resume
+        const updateData = {
+          id: currentResumeId,
+          user_id: user?.ID,
+          title: resumeTitle,
+          template: selectedTemplate,
+          content: resumeContent,
+          last_modified: new Date().toISOString()
+        };
+        
+        // Only update thumbnail if we have a new one
+        if (thumbnailId) {
+          updateData.thumbnail = thumbnailId;
+        }
+        
+        const updateResponse = await window.ezsite.apis.tableUpdate(6625, updateData);
+        if (updateResponse.error) throw updateResponse.error;
+        
+        toast({
+          title: "Resume Updated",
+          description: "Your resume has been successfully updated."
+        });
+      } else {
+        // Create new resume
+        const newResume = {
+          user_id: user?.ID,
+          title: resumeTitle,
+          template: selectedTemplate,
+          content: resumeContent,
+          last_modified: new Date().toISOString(),
+          thumbnail: thumbnailId
+        };
+        
+        const createResponse = await window.ezsite.apis.tableCreate(6625, newResume);
+        if (createResponse.error) throw createResponse.error;
+        
+        // Update user activity
+        try {
+          const activityResponse = await window.ezsite.apis.tablePage(7227, {
+            PageNo: 1,
+            PageSize: 1,
+            Filters: [
+              {
+                name: "user_id",
+                op: "Equal",
+                value: user?.ID
+              }
+            ]
+          });
+          
+          if (activityResponse.error) throw activityResponse.error;
+          
+          if (activityResponse.data.List && activityResponse.data.List.length > 0) {
+            const activity = activityResponse.data.List[0];
+            await window.ezsite.apis.tableUpdate(7227, {
+              id: activity.id,
+              user_id: user?.ID,
+              resume_count: (activity.resume_count || 0) + 1,
+              last_active: new Date().toISOString()
+            });
+          }
+        } catch (activityError) {
+          console.error('Error updating activity:', activityError);
+        }
+        
+        // Get the created resume to set current ID
+        const getCreatedResponse = await window.ezsite.apis.tablePage(6625, {
+          PageNo: 1,
+          PageSize: 1,
+          OrderByField: "last_modified",
+          IsAsc: false,
+          Filters: [
+            {
+              name: "user_id",
+              op: "Equal",
+              value: user?.ID
+            }
+          ]
+        });
+        
+        if (getCreatedResponse.data.List && getCreatedResponse.data.List.length > 0) {
+          setCurrentResumeId(getCreatedResponse.data.List[0].id);
+        }
+        
+        toast({
+          title: "Resume Saved",
+          description: "Your resume has been successfully saved."
+        });
+      }
+    } catch (error) {
+      console.error('Error saving resume:', error);
+      toast({
+        title: "Save Failed",
+        description: "Failed to save resume. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
@@ -126,9 +362,9 @@ const ResumePage = () => {
       ...prev,
       templateSelected: true
     }));
-    
+
     // Find the selected template to show detailed information
-    const template = EXTENDED_TEMPLATES.find(t => t.id === templateId);
+    const template = EXTENDED_TEMPLATES.find((t) => t.id === templateId);
     if (template) {
       toast({
         title: `${template.displayName} Selected`,
@@ -191,7 +427,7 @@ const ResumePage = () => {
             });
           });
           break;
-          
+
         case 'png':
           html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
             const link = document.createElement('a');
@@ -206,7 +442,7 @@ const ResumePage = () => {
             });
           });
           break;
-          
+
         case 'jpg':
           html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
             const link = document.createElement('a');
@@ -221,7 +457,7 @@ const ResumePage = () => {
             });
           });
           break;
-          
+
         case 'docx':
           // For DOCX export, we would typically use a library like docx-js
           // This is a simplified version for demonstration purposes
@@ -229,18 +465,18 @@ const ResumePage = () => {
             title: "DOCX Export",
             description: "Preparing DOCX export..."
           });
-          
+
           // Simulate DOCX export (in a real app, you would use a proper library)
           setTimeout(() => {
             // Create a simple text file for demonstration
             const resumeText = `${resumeData.personalInfo.name}\n${resumeData.personalInfo.title}\n\nContact: ${resumeData.personalInfo.email} | ${resumeData.personalInfo.phone}\n\nSummary: ${resumeData.personalInfo.summary}\n`;
-            
+
             const blob = new Blob([resumeText], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `${filename}.docx`;
             link.click();
-            
+
             setIsDownloading(false);
             toast({
               title: "Resume Downloaded",
@@ -248,7 +484,7 @@ const ResumePage = () => {
             });
           }, 1500);
           break;
-          
+
         default:
           setIsDownloading(false);
           toast({
@@ -299,14 +535,24 @@ const ResumePage = () => {
 
   // Determine which template component to render based on the selected template
   const getSelectedTemplateComponent = () => {
-    const template = EXTENDED_TEMPLATES.find(t => t.id === selectedTemplate);
+    const template = EXTENDED_TEMPLATES.find((t) => t.id === selectedTemplate);
     if (!template) return BasicTemplate; // Default to BasicTemplate if not found
-    
+
     // Find the corresponding component
     return TEMPLATE_COMPONENTS[template.component] || BasicTemplate;
   };
-  
+
   const SelectedTemplateComponent = getSelectedTemplateComponent();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+        <h2 className="text-2xl font-semibold">Loading Resume...</h2>
+        <p className="text-muted-foreground">Please wait while we fetch your resume</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -317,7 +563,36 @@ const ResumePage = () => {
 
         <div className="container mx-auto px-4 py-8 max-w-6xl">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Resume Builder</h1>
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold text-center mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Resume Builder</h1>
+              
+              {isAuthenticated && (
+                <div className="flex gap-2">
+                  {isAuthenticated && section !== "templates" && (
+                    <div className="flex items-center mb-2">
+                      <input
+                        type="text"
+                        value={resumeTitle}
+                        onChange={(e) => setResumeTitle(e.target.value)}
+                        placeholder="Resume Title"
+                        className="px-3 py-1 border border-gray-300 rounded-md mr-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                      <Button 
+                        onClick={saveResume}
+                        disabled={isSaving}
+                        className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                      >
+                        {isSaving ? (
+                          <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
+                        ) : (
+                          <><Save className="w-4 h-4 mr-2" /> Save Resume</>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
             <div className="flex justify-center items-center space-x-4 text-sm text-gray-600">
               <div className={`flex items-center ${section === 'templates' ? 'text-primary font-medium' : ''}`}>
                 <span className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${section === 'templates' || progress.templateSelected ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white' : 'bg-gray-200'}`}>1</span>
@@ -369,50 +644,50 @@ const ResumePage = () => {
                     placeholder="Search templates..."
                     className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                    onChange={(e) => setSearchQuery(e.target.value)} />
+
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {TEMPLATE_CATEGORIES.map((category) => (
-                    <Badge 
-                      key={category.id}
-                      variant={selectedCategory === category.id ? "default" : "outline"}
-                      className={`cursor-pointer ${selectedCategory === category.id ? 'bg-gradient-to-r from-blue-600 to-indigo-600' : 'hover:bg-gray-100'}`}
-                      onClick={() => setSelectedCategory(category.id)}
-                    >
+                  {TEMPLATE_CATEGORIES.map((category) =>
+                  <Badge
+                    key={category.id}
+                    variant={selectedCategory === category.id ? "default" : "outline"}
+                    className={`cursor-pointer ${selectedCategory === category.id ? 'bg-gradient-to-r from-blue-600 to-indigo-600' : 'hover:bg-gray-100'}`}
+                    onClick={() => setSelectedCategory(category.id)}>
+
                       {category.name}
                     </Badge>
-                  ))}
+                  )}
                 </div>
               </div>
               
-              {filteredTemplates.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+              {filteredTemplates.length === 0 ?
+              <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                   <Search className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">No templates found</h3>
                   <p className="text-gray-500">Try adjusting your search or filter criteria</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
-                  {filteredTemplates.map((template) => (
-                    <Card
-                      key={template.id}
-                      className={`cursor-pointer hover:shadow-lg transition-all duration-300 ${
-                      selectedTemplate === template.id ?
-                      "ring-2 ring-primary scale-105 shadow-xl" :
-                      "hover:scale-[1.02] shadow-md"}`
-                      }
-                      onClick={() => handleTemplateSelect(template.id)}>
+                </div> :
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
+                  {filteredTemplates.map((template) =>
+                <Card
+                  key={template.id}
+                  className={`cursor-pointer hover:shadow-lg transition-all duration-300 ${
+                  selectedTemplate === template.id ?
+                  "ring-2 ring-primary scale-105 shadow-xl" :
+                  "hover:scale-[1.02] shadow-md"}`
+                  }
+                  onClick={() => handleTemplateSelect(template.id)}>
                         <CardContent className="p-4">
                           <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden shadow-sm">
                             {/* Render the appropriate template component */}
-                            {TEMPLATE_COMPONENTS[template.component] && (
-                              <>
+                            {TEMPLATE_COMPONENTS[template.component] &&
+                      <>
                                 {template.component === 'BasicTemplate' && <BasicTemplate resumeData={resumeData} preview={true} />}
                                 {template.component === 'ModernTemplate' && <ModernTemplate resumeData={resumeData} preview={true} />}
                                 {template.component === 'ProfessionalTemplate' && <ProfessionalTemplate resumeData={resumeData} preview={true} />}
                               </>
-                            )}
+                      }
                           </div>
                           <div className="mt-3 text-center">
                             <h3 className="font-medium">{template.displayName}</h3>
@@ -427,23 +702,23 @@ const ResumePage = () => {
                               </div>
                             </div>
                           </div>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="w-full mt-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleTemplateSelect(template.id);
-                              handleSectionChange("editor");
-                            }}
-                          >
+                          <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full mt-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTemplateSelect(template.id);
+                        handleSectionChange("editor");
+                      }}>
+
                             Use this template
                           </Button>
                         </CardContent>
                       </Card>
-                  ))}
+                )}
                 </div>
-              )}
+              }
               <div className="flex justify-end mt-6">
                 <Button
                   onClick={() => {
@@ -489,18 +764,33 @@ const ResumePage = () => {
                 className="hover:bg-gray-100 transition-all duration-300">
                   Back to Templates
                 </Button>
-                <Button
-                  onClick={() => {
-                    toast({
-                      title: "Loading Preview",
-                      description: "Preparing your resume preview..."
-                    });
-                    handleSectionChange("preview");
-                  }}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02]"
-                  disabled={!progress.contentEdited}>
-                  {!progress.contentEdited ? "Edit content first" : "Continue to Preview"}
-                </Button>
+                <div className="flex gap-2">
+                  {isAuthenticated && (
+                    <Button 
+                      onClick={saveResume}
+                      disabled={isSaving || !progress.contentEdited}
+                      className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    >
+                      {isSaving ? (
+                        <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
+                      ) : (
+                        <><Save className="w-4 h-4 mr-2" /> Save Resume</>
+                      )}
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => {
+                      toast({
+                        title: "Loading Preview",
+                        description: "Preparing your resume preview..."
+                      });
+                      handleSectionChange("preview");
+                    }}
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02]"
+                    disabled={!progress.contentEdited}>
+                    {!progress.contentEdited ? "Edit content first" : "Continue to Preview"}
+                  </Button>
+                </div>
               </div>
             </TabsContent>
 
@@ -519,28 +809,44 @@ const ResumePage = () => {
                 <div>
                   <Card className="shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
                     <CardContent className="p-6 space-y-6">
+                      {isAuthenticated && (
+                        <div className="mb-4">
+                          <Button 
+                            onClick={saveResume}
+                            disabled={isSaving}
+                            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                          >
+                            {isSaving ? (
+                              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
+                            ) : (
+                              <><Save className="w-4 h-4 mr-2" /> Save Resume</>
+                            )}
+                          </Button>
+                        </div>
+                      )}
+                      
                       <div>
                         <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Export Options</h3>
                         <div className="space-y-3">
-                          {EXPORT_FORMATS.map((format) => (
-                            <Button
-                              key={format.id}
-                              variant={format.id === 'pdf' ? "default" : "outline"}
-                              className={`w-full ${format.id === 'pdf' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'hover:bg-gray-100'} transition-all duration-300 transform hover:scale-[1.02]`}
-                              onClick={() => handleExport(format.id)}
-                              disabled={isDownloading}
-                            >
-                              {isDownloading ? (
-                                'Preparing Download...'
-                              ) : (
-                                <>
+                          {EXPORT_FORMATS.map((format) =>
+                          <Button
+                            key={format.id}
+                            variant={format.id === 'pdf' ? "default" : "outline"}
+                            className={`w-full ${format.id === 'pdf' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'hover:bg-gray-100'} transition-all duration-300 transform hover:scale-[1.02]`}
+                            onClick={() => handleExport(format.id)}
+                            disabled={isDownloading}>
+
+                              {isDownloading ?
+                            'Preparing Download...' :
+
+                            <>
                                   {format.icon === 'FileText' ? <FileText className="h-4 w-4 mr-2" /> : <ImageIcon className="h-4 w-4 mr-2" />}
                                   Download as {format.name}
                                   {format.id === 'pdf' && <Badge className="ml-2 bg-blue-500">Best</Badge>}
                                 </>
-                              )}
+                            }
                             </Button>
-                          ))}
+                          )}
                         </div>
                         <p className="text-xs text-gray-500 mt-2 text-center">Files will be optimized for best quality</p>
                       </div>
@@ -570,12 +876,21 @@ const ResumePage = () => {
                   className="hover:bg-gray-100 transition-all duration-300">
                   Back to Editor
                 </Button>
+                {isAuthenticated && (
+                  <Button 
+                    onClick={() => navigate("/history")}
+                    className="bg-gray-800 hover:bg-gray-700"
+                  >
+                    View My Resumes
+                  </Button>
+                )}
               </div>
             </TabsContent>
           </div>
         </div>
       </Tabs>
-    </div>);
+    </div>
+  );
 
 };
 

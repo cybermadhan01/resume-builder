@@ -113,6 +113,18 @@ const MainNavbar = () => {
               <div className="mt-8 pt-4 border-t border-gray-800">
                 {isAuthenticated ?
                 <div className="space-y-4">
+                    <Button variant="ghost" className="w-full justify-start" asChild onClick={() => setIsOpen(false)}>
+                      <Link to="/profile">
+                        <User className="mr-2 h-4 w-4" />
+                        Profile
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" className="w-full justify-start" asChild onClick={() => setIsOpen(false)}>
+                      <Link to="/history">
+                        <History className="mr-2 h-4 w-4" />
+                        History
+                      </Link>
+                    </Button>
                     <div className="flex items-center gap-4 px-2">
                       <Avatar>
                         <AvatarFallback className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">

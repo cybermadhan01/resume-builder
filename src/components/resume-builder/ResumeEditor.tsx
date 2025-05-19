@@ -18,13 +18,13 @@ interface ResumeEditorProps {
 const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => {
   const { toast } = useToast();
   const [showImageUploader, setShowImageUploader] = useState(false);
-  
+
   // Check if template supports image upload (this would normally be passed from the parent)
   useEffect(() => {
     // For demonstration purposes, we'll assume the first 15 templates support image upload
     setShowImageUploader(true);
   }, []);
-  
+
   const handleImageUpload = (imageData: string) => {
     onUpdate({
       personalInfo: {
@@ -32,7 +32,7 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
         profileImage: imageData
       }
     });
-    
+
     if (imageData) {
       toast({
         title: "Image Updated",
@@ -195,14 +195,14 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                 })} />
             </div>
             
-            {showImageUploader && (
-              <div className="space-y-2">
-                <ImageUploader 
-                  onImageUpload={handleImageUpload}
-                  currentImage={resumeData.personalInfo.profileImage}
-                />
+            {showImageUploader &&
+            <div className="space-y-2">
+                <ImageUploader
+                onImageUpload={handleImageUpload}
+                currentImage={resumeData.personalInfo.profileImage} />
+
               </div>
-            )}
+            }
           </div>
         </CardContent>
       </Card>

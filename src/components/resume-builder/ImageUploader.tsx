@@ -3,15 +3,23 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/components/ui/progress';
 
 interface ImageUploaderProps {
-  onImageUpload: (imageData: string) => void;
+  onImageUpload: (imageData: string | number) => void;
   currentImage?: string;
+  storeToServer?: boolean;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, currentImage }) => {
+const ImageUploader: React.FC<ImageUploaderProps> = ({ 
+  onImageUpload, 
+  currentImage,
+  storeToServer = false
+}) => {
   const [isDragging, setIsDragging] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | undefined>(currentImage);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -51,7 +59,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, currentIma
     [onImageUpload]
   );
 
-  const processFile = (file: File) => {
+  const processFile = async (file: File) => {
     // Check if file is an image
     if (!file.type.match('image.*')) {
       toast({
@@ -72,18 +80,100 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, currentIma
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      setPreviewImage(result);
-      onImageUpload(result);
+    if (storeToServer) {
+      await uploadToServer(file);
+    } else {
+      // Client-side processing for immediate preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setPreviewImage(result);
+        onImageUpload(result);
+
+        toast({
+          title: "Image Uploaded",
+          description: "Your image has been successfully uploaded"
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadToServer = async (file: File) => {
+    try {
+      setIsUploading(true);
+      setUploadProgress(0);
+      
+      // Create a preview immediately for better UX
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setPreviewImage(result);
+      };
+      reader.readAsDataURL(file);
+      
+      // Create XHR for progress tracking
+      const xhr = new XMLHttpRequest();
+      
+      // Track upload progress
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(percentComplete);
+        }
+      });
+      
+      // Create upload promise
+      const uploadPromise = new Promise<number>((resolve, reject) => {
+        xhr.open('POST', '/api/upload', true);
+        
+        xhr.onload = async () => {
+          if (xhr.status === 200) {
+            try {
+              const response = JSON.parse(xhr.responseText);
+              resolve(response.data);
+            } catch (error) {
+              reject(new Error('Failed to parse response'));
+            }
+          } else {
+            reject(new Error(`Upload failed with status: ${xhr.status}`));
+          }
+        };
+        
+        xhr.onerror = () => {
+          reject(new Error('Upload failed'));
+        };
+        
+        // Create FormData
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('filename', file.name);
+        
+        // Send request
+        xhr.send(formData);
+      });
+      
+      // Wait for upload to complete
+      const storeFileId = await uploadPromise;
+      
+      // Update with server file ID
+      onImageUpload(storeFileId);
       
       toast({
         title: "Image Uploaded",
-        description: "Your image has been successfully uploaded"
+        description: "Your image has been successfully uploaded to the server"
       });
-    };
-    reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: "Upload Failed",
+        description: error instanceof Error ? error.message : "Failed to upload image",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
   };
 
   const handleButtonClick = () => {
@@ -96,7 +186,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, currentIma
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    
+
     toast({
       title: "Image Removed",
       description: "Your profile image has been removed"
@@ -115,37 +205,44 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, currentIma
         ref={fileInputRef}
         onChange={handleFileSelect}
         className="hidden"
-        accept="image/*"
-      />
+        accept="image/*" />
+
       
-      {previewImage ? (
-        <div className="relative">
+      {previewImage ?
+      <div className="relative">
           <Card className="overflow-hidden">
-            <img 
-              src={previewImage} 
-              alt="Profile" 
-              className="w-full h-auto max-h-64 object-contain"
-            />
+            <img
+            src={previewImage}
+            alt="Profile"
+            className="w-full h-auto max-h-64 object-contain" />
+
             <Button
-              variant="destructive"
-              size="icon"
-              className="absolute top-2 right-2 rounded-full w-8 h-8"
-              onClick={handleRemoveImage}
-            >
+            variant="destructive"
+            size="icon"
+            className="absolute top-2 right-2 rounded-full w-8 h-8"
+            onClick={handleRemoveImage}
+            disabled={isUploading}>
               <X size={16} />
             </Button>
+            
+            {isUploading && (
+              <div className="absolute bottom-0 left-0 right-0 bg-background/80 p-2">
+                <Progress value={uploadProgress} className="h-2" />
+                <p className="text-xs text-center mt-1">Uploading: {uploadProgress}%</p>
+              </div>
+            )}
           </Card>
-        </div>
-      ) : (
-        <div
-          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors duration-200 ${
-            isDragging ? 'border-primary bg-primary/10' : 'border-gray-300 hover:border-primary/50'
-          }`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={handleButtonClick}
-        >
+        </div> :
+
+      <div
+        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors duration-200 ${
+        isDragging ? 'border-primary bg-primary/10' : 'border-gray-300 hover:border-primary/50'}`
+        }
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={handleButtonClick}>
+
           <div className="flex flex-col items-center justify-center space-y-3">
             <div className="rounded-full bg-primary/10 p-3">
               <ImageIcon className="h-6 w-6 text-primary" />
@@ -158,15 +255,34 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, currentIma
                 PNG, JPG or JPEG (max. 5MB)
               </p>
             </div>
-            <Button 
-              variant="outline" 
-              className="mt-2"
-              type="button"
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Choose File
+            <Button
+            variant="outline"
+            className="mt-2"
+            type="button"
+            disabled={isUploading}>
+              {isUploading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Choose File
+                </>
+              )}
             </Button>
           </div>
+        </div>
+      }
+      
+      {isUploading && !previewImage && (
+        <div className="mt-2">
+          <Progress value={uploadProgress} className="h-2" />
+          <p className="text-xs text-center mt-1">Uploading: {uploadProgress}%</p>
         </div>
       )}
     </div>
