@@ -85,10 +85,10 @@ const HomePage = () => {
         });
 
         if (error) throw error;
-        
+
         if (data && data.List && data.List.length > 0) {
           // Transform the data to match our template format
-          const templates = data.List.map(item => ({
+          const templates = data.List.map((item) => ({
             id: item.ID,
             title: item.template_name,
             description: item.template_description,
@@ -96,9 +96,9 @@ const HomePage = () => {
             ratings: (4.5 + Math.random() * 0.5).toFixed(1), // Simulated ratings
             downloads: Math.floor(500 + Math.random() * 1000) // Simulated downloads
           }));
-          
+
           setResumeTemplates(templates.length > 0 ? templates : defaultTemplates);
-          
+
           // Set the premium template to the first template or a default
           if (templates.length > 0) {
             setPremiumTemplate({
@@ -123,7 +123,7 @@ const HomePage = () => {
     setActiveFilter(filter);
     // In a real implementation, you would fetch different templates based on the filter
     // For now, we'll just simulate it by randomly reordering the templates
-    setResumeTemplates(prev => [...prev].sort(() => Math.random() - 0.5));
+    setResumeTemplates((prev) => [...prev].sort(() => Math.random() - 0.5));
   };
 
   return (
@@ -193,28 +193,28 @@ const HomePage = () => {
           <div className="flex items-center justify-between mb-10">
             <h2 className="text-3xl font-bold">Trending Templates</h2>
             <div className="flex items-center gap-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className={activeFilter === "new" ? "text-white bg-gray-800" : "text-gray-400 hover:text-white"}
-                onClick={() => handleFilterChange("new")}
-              >
+                onClick={() => handleFilterChange("new")}>
+
                 New
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className={activeFilter === "popular" ? "text-white bg-gray-800" : "text-gray-400 hover:text-white"}
-                onClick={() => handleFilterChange("popular")}
-              >
+                onClick={() => handleFilterChange("popular")}>
+
                 Popular
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className={activeFilter === "featured" ? "text-white bg-gray-800" : "text-gray-400 hover:text-white"}
-                onClick={() => handleFilterChange("featured")}
-              >
+                onClick={() => handleFilterChange("featured")}>
+
                 Featured
               </Button>
             </div>

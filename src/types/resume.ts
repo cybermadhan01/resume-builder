@@ -5,6 +5,7 @@ export interface PersonalInfo {
   address?: string;
   title: string;
   summary: string;
+  profileImage?: string;
 }
 
 export interface Experience {
@@ -30,4 +31,11 @@ export interface ResumeData {
   skills: string[];
 }
 
-export type TemplateType = "basic" | "modern" | "professional";
+export type TemplateType = "basic" | "modern" | "professional" | string;
+
+export interface ExportFormat {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+}

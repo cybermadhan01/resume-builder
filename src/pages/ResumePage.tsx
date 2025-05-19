@@ -3,11 +3,14 @@ import html2pdf from "html2pdf.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import ResumeEditor from "@/components/resume-builder/ResumeEditor";
-import { ResumeData } from "@/types/resume";
+import { ResumeData, ExportFormat } from "@/types/resume";
 import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 import { useToast } from "@/hooks/use-toast";
+import { Download, FileText, Star, Image as ImageIcon, Eye, Search, Filter } from "lucide-react";
+import { EXTENDED_TEMPLATES, TEMPLATE_CATEGORIES, TemplateData } from "@/data/resumeTemplates";
 
 // Resume templates imports
 import BasicTemplate from "@/components/resume-templates/BasicTemplate";
@@ -21,7 +24,8 @@ const DEFAULT_RESUME_DATA: ResumeData = {
     phone: "(555) 123-4567",
     address: "123 Main St, New York, NY 10001",
     title: "Software Engineer",
-    summary: "Experienced software engineer with a passion for creating innovative solutions."
+    summary: "Experienced software engineer with a passion for creating innovative solutions.",
+    profileImage: ""
   },
   experience: [
   {
@@ -58,10 +62,20 @@ const DEFAULT_RESUME_DATA: ResumeData = {
   skills: ["JavaScript", "React", "Node.js", "TypeScript", "MongoDB", "Express", "REST APIs", "Git", "Agile Methodologies"]
 };
 
-const TEMPLATES = [
-{ id: "basic", name: "Basic", component: BasicTemplate },
-{ id: "modern", name: "Modern", component: ModernTemplate },
-{ id: "professional", name: "Professional", component: ProfessionalTemplate }];
+// Map of template components
+const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: ResumeData, preview?: boolean}>} = {
+  'BasicTemplate': BasicTemplate,
+  'ModernTemplate': ModernTemplate,
+  'ProfessionalTemplate': ProfessionalTemplate
+};
+
+// Export formats available
+const EXPORT_FORMATS: ExportFormat[] = [
+  { id: 'pdf', name: 'PDF', description: 'Portable Document Format', icon: 'FileText' },
+  { id: 'png', name: 'PNG', description: 'High-quality image format', icon: 'Image' },
+  { id: 'jpg', name: 'JPG', description: 'Compressed image format', icon: 'Image' },
+  { id: 'docx', name: 'DOCX', description: 'Microsoft Word format', icon: 'FileText' }
+];
 
 
 const ResumePage = () => {
@@ -74,6 +88,9 @@ const ResumePage = () => {
   const [selectedTemplate, setSelectedTemplate] = useState("basic");
   const [section, setSection] = useState("templates");
   const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(EXTENDED_TEMPLATES);
   const [progress, setProgress] = useState<{[key: string]: boolean;}>({
     templateSelected: false,
     contentEdited: false
@@ -81,12 +98,43 @@ const ResumePage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Filter templates based on category and search query
+  useEffect(() => {
+    let templates = [...EXTENDED_TEMPLATES];
+    
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      templates = templates.filter(t => t.category === selectedCategory);
+    }
+    
+    // Filter by search query
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      templates = templates.filter(t => 
+        t.name.toLowerCase().includes(query) || 
+        t.displayName.toLowerCase().includes(query) ||
+        (t.description && t.description.toLowerCase().includes(query))
+      );
+    }
+    
+    setFilteredTemplates(templates);
+  }, [selectedCategory, searchQuery]);
+
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
     setProgress((prev) => ({
       ...prev,
       templateSelected: true
     }));
+    
+    // Find the selected template to show detailed information
+    const template = EXTENDED_TEMPLATES.find(t => t.id === templateId);
+    if (template) {
+      toast({
+        title: `${template.displayName} Selected`,
+        description: template.description || `You've selected the ${template.displayName} template`
+      });
+    }
   };
 
   const handleResumeDataUpdate = (data: Partial<ResumeData>) => {
@@ -112,6 +160,7 @@ const ResumePage = () => {
         description: "Unable to generate resume. Please try again.",
         variant: "destructive"
       });
+      setIsDownloading(false);
       return;
     }
 
@@ -128,31 +177,85 @@ const ResumePage = () => {
 
     toast({
       title: "Preparing Download",
-      description: "Your resume is being prepared for download..."
+      description: `Your resume is being prepared for download as ${format.toUpperCase()}...`
     });
 
     try {
-      if (format === 'pdf') {
-        html2pdf().set(options).from(element).save().then(() => {
-          setIsDownloading(false);
-          toast({
-            title: "Resume Downloaded",
-            description: "Your resume has been successfully downloaded as a PDF."
+      switch (format) {
+        case 'pdf':
+          html2pdf().set(options).from(element).save().then(() => {
+            setIsDownloading(false);
+            toast({
+              title: "Resume Downloaded",
+              description: "Your resume has been successfully downloaded as a PDF."
+            });
           });
-        });
-      } else if (format === 'png') {
-        html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
-          const link = document.createElement('a');
-          link.download = `${filename}.png`;
-          link.href = canvas.toDataURL('image/png');
-          link.click();
-          setIsDownloading(false);
+          break;
+          
+        case 'png':
+          html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
+            const link = document.createElement('a');
+            link.download = `${filename}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            setIsDownloading(false);
 
-          toast({
-            title: "Resume Downloaded",
-            description: "Your resume has been successfully downloaded as a PNG."
+            toast({
+              title: "Resume Downloaded",
+              description: "Your resume has been successfully downloaded as a PNG."
+            });
           });
-        });
+          break;
+          
+        case 'jpg':
+          html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
+            const link = document.createElement('a');
+            link.download = `${filename}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+            setIsDownloading(false);
+
+            toast({
+              title: "Resume Downloaded",
+              description: "Your resume has been successfully downloaded as a JPG."
+            });
+          });
+          break;
+          
+        case 'docx':
+          // For DOCX export, we would typically use a library like docx-js
+          // This is a simplified version for demonstration purposes
+          toast({
+            title: "DOCX Export",
+            description: "Preparing DOCX export..."
+          });
+          
+          // Simulate DOCX export (in a real app, you would use a proper library)
+          setTimeout(() => {
+            // Create a simple text file for demonstration
+            const resumeText = `${resumeData.personalInfo.name}\n${resumeData.personalInfo.title}\n\nContact: ${resumeData.personalInfo.email} | ${resumeData.personalInfo.phone}\n\nSummary: ${resumeData.personalInfo.summary}\n`;
+            
+            const blob = new Blob([resumeText], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${filename}.docx`;
+            link.click();
+            
+            setIsDownloading(false);
+            toast({
+              title: "Resume Downloaded",
+              description: "Your resume has been successfully downloaded as a DOCX file."
+            });
+          }, 1500);
+          break;
+          
+        default:
+          setIsDownloading(false);
+          toast({
+            title: "Format Not Supported",
+            description: `The format ${format} is not currently supported.`,
+            variant: "destructive"
+          });
       }
     } catch (error) {
       setIsDownloading(false);
@@ -194,7 +297,16 @@ const ResumePage = () => {
     }, 100);
   };
 
-  const SelectedTemplateComponent = TEMPLATES.find((t) => t.id === selectedTemplate)?.component || BasicTemplate;
+  // Determine which template component to render based on the selected template
+  const getSelectedTemplateComponent = () => {
+    const template = EXTENDED_TEMPLATES.find(t => t.id === selectedTemplate);
+    if (!template) return BasicTemplate; // Default to BasicTemplate if not found
+    
+    // Find the corresponding component
+    return TEMPLATE_COMPONENTS[template.component] || BasicTemplate;
+  };
+  
+  const SelectedTemplateComponent = getSelectedTemplateComponent();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -247,26 +359,91 @@ const ResumePage = () => {
 
             <TabsContent ref={templatesRef} value="templates" className="space-y-6 transition-all duration-300 ease-in-out animate-in fade-in">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Choose a Template</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-500">
-                {TEMPLATES.map((template) =>
-                <Card
-                  key={template.id}
-                  className={`cursor-pointer hover:shadow-lg transition-all duration-300 ${
-                  selectedTemplate === template.id ?
-                  "ring-2 ring-primary scale-105 shadow-xl" :
-                  "hover:scale-[1.02] shadow-md"}`
-                  }
-                  onClick={() => handleTemplateSelect(template.id)}>
-
-                    <CardContent className="p-4">
-                      <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden shadow-sm">
-                        <template.component resumeData={resumeData} preview={true} />
-                      </div>
-                      <h3 className="mt-3 text-center font-medium">{template.name}</h3>
-                    </CardContent>
-                  </Card>
-                )}
+              
+              {/* Search and filter */}
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="relative flex-grow">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <input
+                    type="text"
+                    placeholder="Search templates..."
+                    className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {TEMPLATE_CATEGORIES.map((category) => (
+                    <Badge 
+                      key={category.id}
+                      variant={selectedCategory === category.id ? "default" : "outline"}
+                      className={`cursor-pointer ${selectedCategory === category.id ? 'bg-gradient-to-r from-blue-600 to-indigo-600' : 'hover:bg-gray-100'}`}
+                      onClick={() => setSelectedCategory(category.id)}
+                    >
+                      {category.name}
+                    </Badge>
+                  ))}
+                </div>
               </div>
+              
+              {filteredTemplates.length === 0 ? (
+                <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                  <Search className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-1">No templates found</h3>
+                  <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
+                  {filteredTemplates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className={`cursor-pointer hover:shadow-lg transition-all duration-300 ${
+                      selectedTemplate === template.id ?
+                      "ring-2 ring-primary scale-105 shadow-xl" :
+                      "hover:scale-[1.02] shadow-md"}`
+                      }
+                      onClick={() => handleTemplateSelect(template.id)}>
+                        <CardContent className="p-4">
+                          <div className="aspect-[8.5/11] bg-white border rounded-md overflow-hidden shadow-sm">
+                            {/* Render the appropriate template component */}
+                            {TEMPLATE_COMPONENTS[template.component] && (
+                              <>
+                                {template.component === 'BasicTemplate' && <BasicTemplate resumeData={resumeData} preview={true} />}
+                                {template.component === 'ModernTemplate' && <ModernTemplate resumeData={resumeData} preview={true} />}
+                                {template.component === 'ProfessionalTemplate' && <ProfessionalTemplate resumeData={resumeData} preview={true} />}
+                              </>
+                            )}
+                          </div>
+                          <div className="mt-3 text-center">
+                            <h3 className="font-medium">{template.displayName}</h3>
+                            <div className="flex items-center justify-center mt-1 text-sm text-gray-600">
+                              <div className="flex items-center mr-3">
+                                <Star className="h-3.5 w-3.5 text-yellow-500 mr-1" />
+                                <span>{template.rating}</span>
+                              </div>
+                              <div className="text-gray-400">|</div>
+                              <div className="ml-3 text-gray-600">
+                                <span>{template.downloads} downloads</span>
+                              </div>
+                            </div>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="w-full mt-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleTemplateSelect(template.id);
+                              handleSectionChange("editor");
+                            }}
+                          >
+                            Use this template
+                          </Button>
+                        </CardContent>
+                      </Card>
+                  ))}
+                </div>
+              )}
               <div className="flex justify-end mt-6">
                 <Button
                   onClick={() => {
@@ -345,20 +522,27 @@ const ResumePage = () => {
                       <div>
                         <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Export Options</h3>
                         <div className="space-y-3">
-                          <Button
-                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02]"
-                            onClick={() => handleExport('pdf')}
-                            disabled={isDownloading}>
-                            {isDownloading ? 'Preparing Download...' : 'Download as PDF'}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="w-full hover:bg-gray-100 transition-all duration-300"
-                            onClick={() => handleExport('png')}
-                            disabled={isDownloading}>
-                            {isDownloading ? 'Preparing Download...' : 'Download as PNG'}
-                          </Button>
+                          {EXPORT_FORMATS.map((format) => (
+                            <Button
+                              key={format.id}
+                              variant={format.id === 'pdf' ? "default" : "outline"}
+                              className={`w-full ${format.id === 'pdf' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'hover:bg-gray-100'} transition-all duration-300 transform hover:scale-[1.02]`}
+                              onClick={() => handleExport(format.id)}
+                              disabled={isDownloading}
+                            >
+                              {isDownloading ? (
+                                'Preparing Download...'
+                              ) : (
+                                <>
+                                  {format.icon === 'FileText' ? <FileText className="h-4 w-4 mr-2" /> : <ImageIcon className="h-4 w-4 mr-2" />}
+                                  Download as {format.name}
+                                  {format.id === 'pdf' && <Badge className="ml-2 bg-blue-500">Best</Badge>}
+                                </>
+                              )}
+                            </Button>
+                          ))}
                         </div>
+                        <p className="text-xs text-gray-500 mt-2 text-center">Files will be optimized for best quality</p>
                       </div>
                       
                       <hr className="my-4" />

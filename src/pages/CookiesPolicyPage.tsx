@@ -61,8 +61,8 @@ const CookiesPolicyPage = () => {
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>);
+
 };
 
 export default CookiesPolicyPage;

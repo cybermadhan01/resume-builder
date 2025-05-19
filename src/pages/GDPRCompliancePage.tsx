@@ -95,8 +95,8 @@ const GDPRCompliancePage = () => {
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>);
+
 };
 
 export default GDPRCompliancePage;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Plus, Trash2 } from "lucide-react";
 import { ResumeData } from "@/types/resume";
+import ImageUploader from "./ImageUploader";
+import { useToast } from "@/hooks/use-toast";
 
 interface ResumeEditorProps {
   resumeData: ResumeData;
@@ -14,6 +16,30 @@ interface ResumeEditorProps {
 }
 
 const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => {
+  const { toast } = useToast();
+  const [showImageUploader, setShowImageUploader] = useState(false);
+  
+  // Check if template supports image upload (this would normally be passed from the parent)
+  useEffect(() => {
+    // For demonstration purposes, we'll assume the first 15 templates support image upload
+    setShowImageUploader(true);
+  }, []);
+  
+  const handleImageUpload = (imageData: string) => {
+    onUpdate({
+      personalInfo: {
+        ...resumeData.personalInfo,
+        profileImage: imageData
+      }
+    });
+    
+    if (imageData) {
+      toast({
+        title: "Image Updated",
+        description: "Your profile image has been updated in your resume"
+      });
+    }
+  };
   const addExperience = () => {
     const newExperience = {
       id: `exp-${Date.now()}`,
@@ -168,6 +194,15 @@ const ResumeEditor: React.FC<ResumeEditorProps> = ({ resumeData, onUpdate }) => 
                   }
                 })} />
             </div>
+            
+            {showImageUploader && (
+              <div className="space-y-2">
+                <ImageUploader 
+                  onImageUpload={handleImageUpload}
+                  currentImage={resumeData.personalInfo.profileImage}
+                />
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

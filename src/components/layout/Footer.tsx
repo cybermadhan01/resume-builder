@@ -14,20 +14,17 @@ const Footer = () => {
               Create professional resumes that stand out and get you noticed by recruiters.
             </p>
             <div className="flex space-x-4">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">
-                <Twitter size={20} />
+              <a href="https://x.com/CyberMadhan" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors hover:scale-110" title="Twitter/X">
+                <Twitter size={24} className="hover:text-blue-400" />
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">
-                <Facebook size={20} />
+              <a href="https://www.instagram.com/madhan_tentacion" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors hover:scale-110" title="Instagram">
+                <Instagram size={24} className="hover:text-pink-500" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">
-                <Instagram size={20} />
+              <a href="https://www.linkedin.com/in/g-madhan-kumar-408807253" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors hover:scale-110" title="LinkedIn">
+                <Linkedin size={24} className="hover:text-blue-600" />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">
-                <Linkedin size={20} />
-              </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">
-                <Github size={20} />
+              <a href="https://github.com/cybermadhan01" target="_blank" rel="noopener noreferrer" className="hover:text-gray-600 transition-colors hover:scale-110" title="GitHub">
+                <Github size={24} className="hover:text-gray-600" />
               </a>
             </div>
           </div>
