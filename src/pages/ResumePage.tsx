@@ -69,7 +69,7 @@ const ResumePage = () => {
   const templatesRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<HTMLDivElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
-  
+
   const [resumeData, setResumeData] = useState<ResumeData>(DEFAULT_RESUME_DATA);
   const [selectedTemplate, setSelectedTemplate] = useState("basic");
   const [section, setSection] = useState("templates");
@@ -171,20 +171,26 @@ const ResumePage = () => {
 
   const handleSectionChange = (value: string) => {
     setSection(value);
-    
+
     // Scroll to the appropriate section
     setTimeout(() => {
-      switch(value) {
-        case "templates":
-          templatesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          break;
-        case "editor":
-          editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          break;
-        case "preview":
-          previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          break;
-      }
+      // First scroll to top to ensure consistent scrolling behavior
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Then scroll to the specific section
+      setTimeout(() => {
+        switch (value) {
+          case "templates":
+            templatesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            break;
+          case "editor":
+            editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            break;
+          case "preview":
+            previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            break;
+        }
+      }, 100);
     }, 100);
   };
 
@@ -221,20 +227,20 @@ const ResumePage = () => {
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger
                 value="templates"
-                className={section === "templates" ? 
-                  "bg-gradient-to-r from-blue-600 to-indigo-600 text-white" : ""}>
+                className={section === "templates" ?
+                "bg-gradient-to-r from-blue-600 to-indigo-600 text-white" : ""}>
                 Templates
               </TabsTrigger>
               <TabsTrigger
                 value="editor"
-                className={section === "editor" ? 
-                  "bg-gradient-to-r from-blue-600 to-indigo-600 text-white" : ""}>
+                className={section === "editor" ?
+                "bg-gradient-to-r from-blue-600 to-indigo-600 text-white" : ""}>
                 Content Editor
               </TabsTrigger>
               <TabsTrigger
                 value="preview"
-                className={section === "preview" ? 
-                  "bg-gradient-to-r from-blue-600 to-indigo-600 text-white" : ""}>
+                className={section === "preview" ?
+                "bg-gradient-to-r from-blue-600 to-indigo-600 text-white" : ""}>
                 Preview & Export
               </TabsTrigger>
             </TabsList>
@@ -301,9 +307,9 @@ const ResumePage = () => {
                 </div>
               </div>
               <div className="flex justify-between mt-6">
-                <Button variant="outline" 
-                  onClick={() => handleSectionChange("templates")}
-                  className="hover:bg-gray-100 transition-all duration-300">
+                <Button variant="outline"
+                onClick={() => handleSectionChange("templates")}
+                className="hover:bg-gray-100 transition-all duration-300">
                   Back to Templates
                 </Button>
                 <Button
@@ -339,16 +345,16 @@ const ResumePage = () => {
                       <div>
                         <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Export Options</h3>
                         <div className="space-y-3">
-                          <Button 
-                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02]" 
-                            onClick={() => handleExport('pdf')} 
+                          <Button
+                            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-[1.02]"
+                            onClick={() => handleExport('pdf')}
                             disabled={isDownloading}>
                             {isDownloading ? 'Preparing Download...' : 'Download as PDF'}
                           </Button>
-                          <Button 
-                            variant="outline" 
-                            className="w-full hover:bg-gray-100 transition-all duration-300" 
-                            onClick={() => handleExport('png')} 
+                          <Button
+                            variant="outline"
+                            className="w-full hover:bg-gray-100 transition-all duration-300"
+                            onClick={() => handleExport('png')}
                             disabled={isDownloading}>
                             {isDownloading ? 'Preparing Download...' : 'Download as PNG'}
                           </Button>
@@ -362,9 +368,9 @@ const ResumePage = () => {
                         <p className="text-sm text-gray-600 mb-4">
                           Use our ATS Score Checker to see how your resume performs against Applicant Tracking Systems.
                         </p>
-                        <Button 
-                          variant="outline" 
-                          className="w-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 hover:bg-gradient-to-r hover:from-amber-500/20 hover:to-orange-500/20 transition-all duration-300" 
+                        <Button
+                          variant="outline"
+                          className="w-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 hover:bg-gradient-to-r hover:from-amber-500/20 hover:to-orange-500/20 transition-all duration-300"
                           onClick={handleCheckATS}>
                           Check ATS Score
                         </Button>
@@ -374,8 +380,8 @@ const ResumePage = () => {
                 </div>
               </div>
               <div className="flex justify-between mt-6">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => handleSectionChange("editor")}
                   className="hover:bg-gray-100 transition-all duration-300">
                   Back to Editor

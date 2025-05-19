@@ -79,8 +79,18 @@ const HomePage = () => {
                 Build ATS-optimized resumes that get you noticed. Stand out to employers and land your dream job.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button asChild size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-0">
-                  <Link to="/resume-builder">Create Resume</Link>
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-0"
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      setAuthModalOpen(true);
+                      return;
+                    }
+                    window.location.href = '/resume-builder';
+                  }}
+                >
+                  Create Resume
                 </Button>
                 <Button
                   asChild
@@ -170,7 +180,17 @@ const HomePage = () => {
           </div>
 
           <div className="text-center mt-8">
-            <Button variant="link" className="text-purple-400 hover:text-purple-300">
+            <Button 
+              variant="link" 
+              className="text-purple-400 hover:text-purple-300"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  setAuthModalOpen(true);
+                  return;
+                }
+                window.location.href = '/resume-builder';
+              }}
+            >
               View all templates <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>

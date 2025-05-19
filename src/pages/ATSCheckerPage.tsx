@@ -159,13 +159,17 @@ const ATSCheckerPage = () => {
   const handleScore = () => {
     const result = performATSScoring(resumeText, jobDescription);
     setScoreResult(result);
-    
+
     // Automatically switch to results tab and scroll to it
     setTimeout(() => {
       document.querySelector('[value="results"]')?.dispatchEvent(
         new MouseEvent('click', { bubbles: true })
       );
-      resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Scroll to the results section with a slight delay to ensure tab switch is complete
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
     }, 300);
   };
 

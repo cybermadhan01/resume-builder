@@ -8,8 +8,11 @@ import ATSCheckerPage from "./pages/ATSCheckerPage";
 import NotFound from "./pages/NotFound";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthSuccessPage from "./pages/AuthSuccessPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsPage from "./pages/TermsPage";
 import MainNavbar from "./components/navigation/MainNavbar";
 import { AuthProvider } from "./contexts/AuthContext";
+import MainLayout from "./components/layout/MainLayout";
 
 const queryClient = new QueryClient();
 
@@ -19,16 +22,19 @@ const App = () =>
       <Toaster />
       <BrowserRouter>
         <AuthProvider>
-          <MainNavbar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/resume-builder" element={<ResumePage />} />
-            <Route path="/ats-checker" element={<ATSCheckerPage />} />
-            <Route path="/resetpassword" element={<ResetPasswordPage />} />
-            <Route path="/onauthsuccess" element={<AuthSuccessPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <MainLayout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/resume-builder" element={<ResumePage />} />
+              <Route path="/ats-checker" element={<ATSCheckerPage />} />
+              <Route path="/resetpassword" element={<ResetPasswordPage />} />
+              <Route path="/onauthsuccess" element={<AuthSuccessPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </MainLayout>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
