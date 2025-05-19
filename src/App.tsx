@@ -10,6 +10,8 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthSuccessPage from "./pages/AuthSuccessPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsPage from "./pages/TermsPage";
+import CookiesPolicyPage from "./pages/CookiesPolicyPage";
+import GDPRCompliancePage from "./pages/GDPRCompliancePage";
 import MainNavbar from "./components/navigation/MainNavbar";
 import { AuthProvider } from "./contexts/AuthContext";
 import MainLayout from "./components/layout/MainLayout";
@@ -31,6 +33,8 @@ const App = () =>
               <Route path="/onauthsuccess" element={<AuthSuccessPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
               <Route path="/terms" element={<TermsPage />} />
+              <Route path="/cookies" element={<CookiesPolicyPage />} />
+              <Route path="/gdpr" element={<GDPRCompliancePage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

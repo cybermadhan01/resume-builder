@@ -176,7 +176,7 @@ const ResumePage = () => {
     setTimeout(() => {
       // First scroll to top to ensure consistent scrolling behavior
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      
+
       // Then scroll to the specific section
       setTimeout(() => {
         switch (value) {

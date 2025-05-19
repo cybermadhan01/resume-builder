@@ -121,8 +121,8 @@ const PrivacyPolicyPage = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default PrivacyPolicyPage;

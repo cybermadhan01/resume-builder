@@ -92,8 +92,8 @@ const TermsPage = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default TermsPage;

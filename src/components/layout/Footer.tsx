@@ -64,8 +64,8 @@ const Footer = () => {
           <p>&copy; {new Date().getFullYear()} Resume Builder. All rights reserved.</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 };
 
 export default Footer;

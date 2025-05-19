@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { ArrowRight, FileText, CheckSquare, Star, Sparkles, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AuthModal from "@/components/auth/AuthModal";
 
-const resumeTemplates = [
+// Default templates that will be replaced with data from the database
+const defaultTemplates = [
 {
   id: 1,
   title: "Basic Clean",
@@ -62,6 +63,68 @@ const features = [
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [resumeTemplates, setResumeTemplates] = useState(defaultTemplates);
+  const [premiumTemplate, setPremiumTemplate] = useState({
+    title: "Premium Resume Template",
+    description: "Optimized for 98% ATS compatibility",
+    thumbnail: "/placeholder.svg"
+  });
+  const [activeFilter, setActiveFilter] = useState("featured");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch template thumbnails from the database
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        setIsLoading(true);
+        const { data, error } = await window.ezsite.apis.tablePage(7165, {
+          PageNo: 1,
+          PageSize: 10,
+          OrderByField: "ID",
+          IsAsc: false
+        });
+
+        if (error) throw error;
+        
+        if (data && data.List && data.List.length > 0) {
+          // Transform the data to match our template format
+          const templates = data.List.map(item => ({
+            id: item.ID,
+            title: item.template_name,
+            description: item.template_description,
+            thumbnail: item.thumbnail_image || "/placeholder.svg",
+            ratings: (4.5 + Math.random() * 0.5).toFixed(1), // Simulated ratings
+            downloads: Math.floor(500 + Math.random() * 1000) // Simulated downloads
+          }));
+          
+          setResumeTemplates(templates.length > 0 ? templates : defaultTemplates);
+          
+          // Set the premium template to the first template or a default
+          if (templates.length > 0) {
+            setPremiumTemplate({
+              title: templates[0].title,
+              description: "Optimized for 98% ATS compatibility",
+              thumbnail: templates[0].thumbnail
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching templates:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTemplates();
+  }, []);
+
+  // Filter templates based on selection
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+    // In a real implementation, you would fetch different templates based on the filter
+    // For now, we'll just simulate it by randomly reordering the templates
+    setResumeTemplates(prev => [...prev].sort(() => Math.random() - 0.5));
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -79,8 +142,8 @@ const HomePage = () => {
                 Build ATS-optimized resumes that get you noticed. Stand out to employers and land your dream job.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 border-0"
                   onClick={() => {
                     if (!isAuthenticated) {
@@ -88,8 +151,8 @@ const HomePage = () => {
                       return;
                     }
                     window.location.href = '/resume-builder';
-                  }}
-                >
+                  }}>
+
                   Create Resume
                 </Button>
                 <Button
@@ -108,10 +171,10 @@ const HomePage = () => {
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-600/30 to-pink-600/30 rounded-lg blur-3xl"></div>
                 <Card className="w-full overflow-hidden rounded-lg bg-gradient-to-br from-purple-900/50 to-black border border-purple-500/50 relative z-10">
                   <CardContent className="p-6">
-                    <img src="/placeholder.svg" alt="Resume Preview" className="w-full h-auto rounded" />
+                    <img src={premiumTemplate.thumbnail} alt="Resume Preview" className="w-full h-auto rounded" />
                     <div className="mt-4">
-                      <h3 className="text-xl font-bold">Premium Resume Template</h3>
-                      <p className="text-gray-300 mt-1">Optimized for 98% ATS compatibility</p>
+                      <h3 className="text-xl font-bold">{premiumTemplate.title}</h3>
+                      <p className="text-gray-300 mt-1">{premiumTemplate.description}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -130,13 +193,28 @@ const HomePage = () => {
           <div className="flex items-center justify-between mb-10">
             <h2 className="text-3xl font-bold">Trending Templates</h2>
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={activeFilter === "new" ? "text-white bg-gray-800" : "text-gray-400 hover:text-white"}
+                onClick={() => handleFilterChange("new")}
+              >
                 New
               </Button>
-              <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={activeFilter === "popular" ? "text-white bg-gray-800" : "text-gray-400 hover:text-white"}
+                onClick={() => handleFilterChange("popular")}
+              >
                 Popular
               </Button>
-              <Button variant="ghost" size="sm" className="text-white bg-gray-800">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={activeFilter === "featured" ? "text-white bg-gray-800" : "text-gray-400 hover:text-white"}
+                onClick={() => handleFilterChange("featured")}
+              >
                 Featured
               </Button>
             </div>
@@ -168,7 +246,7 @@ const HomePage = () => {
                         setAuthModalOpen(true);
                         return;
                       }
-                      // Navigate to resume builder with this template
+                      window.location.href = '/resume-builder';
                     }}>
 
                       Use Template
@@ -180,8 +258,8 @@ const HomePage = () => {
           </div>
 
           <div className="text-center mt-8">
-            <Button 
-              variant="link" 
+            <Button
+              variant="link"
               className="text-purple-400 hover:text-purple-300"
               onClick={() => {
                 if (!isAuthenticated) {
@@ -189,8 +267,8 @@ const HomePage = () => {
                   return;
                 }
                 window.location.href = '/resume-builder';
-              }}
-            >
+              }}>
+
               View all templates <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </div>
@@ -230,7 +308,7 @@ const HomePage = () => {
                       setAuthModalOpen(true);
                       return;
                     }
-                    // Navigate to the resume builder
+                    window.location.href = '/resume-builder';
                   }}>
 
                   Create Your Resume
@@ -241,7 +319,7 @@ const HomePage = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20 rounded-lg blur-3xl"></div>
                 <img
-                  src="/placeholder.svg"
+                  src={resumeTemplates.length > 0 ? resumeTemplates[0].thumbnail : "/placeholder.svg"}
                   alt="Resume Builder Interface"
                   className="relative z-10 rounded-lg border border-purple-500/50" />
 
@@ -264,8 +342,8 @@ const HomePage = () => {
             </div>
             <div className="flex gap-8">
               <Link to="#" className="text-gray-400 hover:text-purple-400">About</Link>
-              <Link to="#" className="text-gray-400 hover:text-purple-400">Privacy</Link>
-              <Link to="#" className="text-gray-400 hover:text-purple-400">Terms</Link>
+              <Link to="/privacy-policy" className="text-gray-400 hover:text-purple-400">Privacy</Link>
+              <Link to="/terms" className="text-gray-400 hover:text-purple-400">Terms</Link>
               <Link to="#" className="text-gray-400 hover:text-purple-400">Contact</Link>
             </div>
           </div>
