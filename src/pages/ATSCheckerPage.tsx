@@ -187,34 +187,34 @@ const ATSCheckerPage = () => {
   const loadATSCheck = async (id: number) => {
     try {
       setIsLoading(true);
-      
+
       const response = await window.ezsite.apis.tablePage(6626, {
         PageNo: 1,
         PageSize: 1,
         Filters: [
-          {
-            name: "id",
-            op: "Equal",
-            value: id
-          }
-        ]
+        {
+          name: "id",
+          op: "Equal",
+          value: id
+        }]
+
       });
-      
+
       if (response.error) throw response.error;
-      
+
       if (response.data.List && response.data.List.length > 0) {
         const check = response.data.List[0] as ATSCheckRecord;
-        
+
         setJobDescription(check.job_description);
-        
+
         // Parse the feedback JSON to get the full scoring result
         const feedbackData = JSON.parse(check.feedback);
         setScoreResult(feedbackData);
         setCurrentCheckId(check.id);
-        
+
         // Switch to results tab
         setActiveTab("results");
-        
+
         toast({
           title: "ATS Check Loaded",
           description: `Successfully loaded ATS check #${check.id}`
@@ -268,13 +268,13 @@ const ATSCheckerPage = () => {
       });
       return;
     }
-    
+
     try {
       setIsSaving(true);
-      
+
       // Stringify the score result for storage
       const feedbackJson = JSON.stringify(scoreResult);
-      
+
       if (currentCheckId) {
         // Update existing check
         const updateData = {
@@ -285,10 +285,10 @@ const ATSCheckerPage = () => {
           feedback: feedbackJson,
           check_date: new Date().toISOString()
         };
-        
+
         const updateResponse = await window.ezsite.apis.tableUpdate(6626, updateData);
         if (updateResponse.error) throw updateResponse.error;
-        
+
         toast({
           title: "ATS Check Updated",
           description: "Your ATS check has been successfully updated."
@@ -297,32 +297,32 @@ const ATSCheckerPage = () => {
         // Create new check
         const newCheck = {
           user_id: user?.ID,
-          resume_id: "",  // Optional, could link to a specific resume
+          resume_id: "", // Optional, could link to a specific resume
           job_description: jobDescription,
           score: scoreResult.overallScore,
           feedback: feedbackJson,
           check_date: new Date().toISOString()
         };
-        
+
         const createResponse = await window.ezsite.apis.tableCreate(6626, newCheck);
         if (createResponse.error) throw createResponse.error;
-        
+
         // Update user activity
         try {
           const activityResponse = await window.ezsite.apis.tablePage(7227, {
             PageNo: 1,
             PageSize: 1,
             Filters: [
-              {
-                name: "user_id",
-                op: "Equal",
-                value: user?.ID
-              }
-            ]
+            {
+              name: "user_id",
+              op: "Equal",
+              value: user?.ID
+            }]
+
           });
-          
+
           if (activityResponse.error) throw activityResponse.error;
-          
+
           if (activityResponse.data.List && activityResponse.data.List.length > 0) {
             const activity = activityResponse.data.List[0];
             await window.ezsite.apis.tableUpdate(7227, {
@@ -335,7 +335,7 @@ const ATSCheckerPage = () => {
         } catch (activityError) {
           console.error('Error updating activity:', activityError);
         }
-        
+
         // Get the created check to set current ID
         const getCreatedResponse = await window.ezsite.apis.tablePage(6626, {
           PageNo: 1,
@@ -343,18 +343,18 @@ const ATSCheckerPage = () => {
           OrderByField: "check_date",
           IsAsc: false,
           Filters: [
-            {
-              name: "user_id",
-              op: "Equal",
-              value: user?.ID
-            }
-          ]
+          {
+            name: "user_id",
+            op: "Equal",
+            value: user?.ID
+          }]
+
         });
-        
+
         if (getCreatedResponse.data.List && getCreatedResponse.data.List.length > 0) {
           setCurrentCheckId(getCreatedResponse.data.List[0].id);
         }
-        
+
         toast({
           title: "ATS Check Saved",
           description: "Your ATS check has been successfully saved."
@@ -384,8 +384,8 @@ const ATSCheckerPage = () => {
         <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
         <h2 className="text-2xl font-semibold">Loading ATS Check...</h2>
         <p className="text-muted-foreground">Please wait while we fetch your data</p>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -466,31 +466,31 @@ const ATSCheckerPage = () => {
                       <CardHeader>
                         <div className="flex justify-between items-center">
                           <CardTitle className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">ATS Scoring Results</CardTitle>
-                          {isAuthenticated && (
-                            <div className="flex gap-2">
-                              <Button 
-                                onClick={saveATSCheck}
-                                disabled={isSaving}
-                                variant="outline"
-                                size="sm"
-                                className="flex items-center gap-1"
-                              >
-                                {isSaving ? (
-                                  <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Saving...</>
-                                ) : (
-                                  <><Save className="w-4 h-4 mr-1" /> Save Results</>
-                                )}
+                          {isAuthenticated &&
+                        <div className="flex gap-2">
+                              <Button
+                            onClick={saveATSCheck}
+                            disabled={isSaving}
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1">
+
+                                {isSaving ?
+                            <><Loader2 className="w-4 h-4 mr-1 animate-spin" /> Saving...</> :
+
+                            <><Save className="w-4 h-4 mr-1" /> Save Results</>
+                            }
                               </Button>
-                              <Button 
-                                onClick={() => navigate("/history")}
-                                variant="outline"
-                                size="sm"
-                                className="flex items-center gap-1"
-                              >
+                              <Button
+                            onClick={() => navigate("/history")}
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1">
+
                                 <History className="w-4 h-4 mr-1" /> History
                               </Button>
                             </div>
-                          )}
+                        }
                         </div>
                         <CardDescription>
                           Here's how your resume performs against this job description
@@ -600,11 +600,11 @@ const ATSCheckerPage = () => {
                       }
                       </CardContent>
                       <CardFooter>
-                        <Button 
-                          onClick={() => setActiveTab("input")} 
-                          variant="outline" 
-                          className="w-full"
-                        >
+                        <Button
+                        onClick={() => setActiveTab("input")}
+                        variant="outline"
+                        className="w-full">
+
                           Try Another Resume
                         </Button>
                       </CardFooter>
@@ -616,8 +616,8 @@ const ATSCheckerPage = () => {
           </Tabs>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 
 };
 

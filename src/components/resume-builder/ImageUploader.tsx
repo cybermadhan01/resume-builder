@@ -11,8 +11,8 @@ interface ImageUploaderProps {
   storeToServer?: boolean;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ 
-  onImageUpload, 
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  onImageUpload,
   currentImage,
   storeToServer = false
 }) => {
@@ -103,7 +103,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     try {
       setIsUploading(true);
       setUploadProgress(0);
-      
+
       // Create a preview immediately for better UX
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -111,54 +111,36 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         setPreviewImage(result);
       };
       reader.readAsDataURL(file);
-      
-      // Create XHR for progress tracking
-      const xhr = new XMLHttpRequest();
-      
-      // Track upload progress
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const percentComplete = Math.round((event.loaded / event.total) * 100);
-          setUploadProgress(percentComplete);
-        }
-      });
-      
-      // Create upload promise
-      const uploadPromise = new Promise<number>((resolve, reject) => {
-        xhr.open('POST', '/api/upload', true);
-        
-        xhr.onload = async () => {
-          if (xhr.status === 200) {
-            try {
-              const response = JSON.parse(xhr.responseText);
-              resolve(response.data);
-            } catch (error) {
-              reject(new Error('Failed to parse response'));
-            }
-          } else {
-            reject(new Error(`Upload failed with status: ${xhr.status}`));
+
+      // Set up simulated progress updates
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
           }
-        };
-        
-        xhr.onerror = () => {
-          reject(new Error('Upload failed'));
-        };
-        
-        // Create FormData
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('filename', file.name);
-        
-        // Send request
-        xhr.send(formData);
+          return prev + 10;
+        });
+      }, 300);
+
+      // Use the actual API for file upload
+      const uploadResponse = await window.ezsite.apis.upload({
+        filename: file.name,
+        file: file
       });
-      
-      // Wait for upload to complete
-      const storeFileId = await uploadPromise;
-      
+
+      // Clear the progress interval
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
+      if (uploadResponse.error) throw new Error(uploadResponse.error);
+
+      // Get the file ID from the response
+      const storeFileId = uploadResponse.data;
+
       // Update with server file ID
       onImageUpload(storeFileId);
-      
+
       toast({
         title: "Image Uploaded",
         description: "Your image has been successfully uploaded to the server"
@@ -172,7 +154,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       });
     } finally {
       setIsUploading(false);
-      setUploadProgress(0);
+      setTimeout(() => setUploadProgress(0), 1000); // Reset progress after a short delay
     }
   };
 
@@ -225,12 +207,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               <X size={16} />
             </Button>
             
-            {isUploading && (
-              <div className="absolute bottom-0 left-0 right-0 bg-background/80 p-2">
+            {isUploading &&
+          <div className="absolute bottom-0 left-0 right-0 bg-background/80 p-2">
                 <Progress value={uploadProgress} className="h-2" />
                 <p className="text-xs text-center mt-1">Uploading: {uploadProgress}%</p>
               </div>
-            )}
+          }
           </Card>
         </div> :
 
@@ -260,33 +242,33 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             className="mt-2"
             type="button"
             disabled={isUploading}>
-              {isUploading ? (
-                <>
+              {isUploading ?
+            <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                   Uploading...
-                </>
-              ) : (
-                <>
+                </> :
+
+            <>
                   <Upload className="h-4 w-4 mr-2" />
                   Choose File
                 </>
-              )}
+            }
             </Button>
           </div>
         </div>
       }
       
-      {isUploading && !previewImage && (
-        <div className="mt-2">
+      {isUploading && !previewImage &&
+      <div className="mt-2">
           <Progress value={uploadProgress} className="h-2" />
           <p className="text-xs text-center mt-1">Uploading: {uploadProgress}%</p>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 };
 
 export default ImageUploader;

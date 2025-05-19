@@ -16,7 +16,7 @@ const MainNavbar = () => {
 
   const routes = [
   { path: "/", label: "Home", icon: <Home className="h-5 w-5 mr-2" /> },
-  { path: "/resume-builder", label: "Resume Builder", icon: <FileText className="h-5 w-5 mr-2" /> },
+  { path: "/resume", label: "Resume Builder", icon: <FileText className="h-5 w-5 mr-2" /> },
   { path: "/ats-checker", label: "ATS Checker", icon: <CheckSquare className="h-5 w-5 mr-2" /> }];
 
 
@@ -63,9 +63,11 @@ const MainNavbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-gray-900 border-gray-800 text-white">
-                  <DropdownMenuItem className="py-2">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
+                  <DropdownMenuItem className="py-2" asChild>
+                    <Link to="/profile">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="py-2" onClick={() => logout()}>
                     <LogOut className="mr-2 h-4 w-4" />

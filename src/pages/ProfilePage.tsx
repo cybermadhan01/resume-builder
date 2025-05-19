@@ -7,8 +7,8 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+  CardTitle } from
+'@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -65,12 +65,12 @@ const ProfilePage = () => {
           PageNo: 1,
           PageSize: 1,
           Filters: [
-            {
-              name: "user_id",
-              op: "Equal",
-              value: user?.ID
-            }
-          ]
+          {
+            name: "user_id",
+            op: "Equal",
+            value: user?.ID
+          }]
+
         });
 
         if (profileResponse.error) throw profileResponse.error;
@@ -80,12 +80,12 @@ const ProfilePage = () => {
           PageNo: 1,
           PageSize: 1,
           Filters: [
-            {
-              name: "user_id",
-              op: "Equal",
-              value: user?.ID
-            }
-          ]
+          {
+            name: "user_id",
+            op: "Equal",
+            value: user?.ID
+          }]
+
         });
 
         if (activityResponse.error) throw activityResponse.error;
@@ -105,23 +105,23 @@ const ProfilePage = () => {
               job_title: '',
               profile_image: ''
             };
-            
+
             const createResponse = await window.ezsite.apis.tableCreate(6624, newProfile);
             if (createResponse.error) throw createResponse.error;
-            
+
             // Fetch the created profile
             const updatedProfileResponse = await window.ezsite.apis.tablePage(6624, {
               PageNo: 1,
               PageSize: 1,
               Filters: [
-                {
-                  name: "user_id",
-                  op: "Equal",
-                  value: user.ID
-                }
-              ]
+              {
+                name: "user_id",
+                op: "Equal",
+                value: user.ID
+              }]
+
             });
-            
+
             if (updatedProfileResponse.error) throw updatedProfileResponse.error;
             if (updatedProfileResponse.data.List && updatedProfileResponse.data.List.length > 0) {
               setProfile(updatedProfileResponse.data.List[0]);
@@ -143,23 +143,23 @@ const ProfilePage = () => {
               ats_check_count: 0,
               last_active: new Date().toISOString()
             };
-            
+
             const createActivityResponse = await window.ezsite.apis.tableCreate(7227, newActivity);
             if (createActivityResponse.error) throw createActivityResponse.error;
-            
+
             // Fetch the created activity
             const updatedActivityResponse = await window.ezsite.apis.tablePage(7227, {
               PageNo: 1,
               PageSize: 1,
               Filters: [
-                {
-                  name: "user_id",
-                  op: "Equal",
-                  value: user.ID
-                }
-              ]
+              {
+                name: "user_id",
+                op: "Equal",
+                value: user.ID
+              }]
+
             });
-            
+
             if (updatedActivityResponse.error) throw updatedActivityResponse.error;
             if (updatedActivityResponse.data.List && updatedActivityResponse.data.List.length > 0) {
               setActivity(updatedActivityResponse.data.List[0]);
@@ -171,7 +171,7 @@ const ProfilePage = () => {
         toast({
           title: 'Error',
           description: 'Failed to load profile data. Please try again.',
-          variant: 'destructive',
+          variant: 'destructive'
         });
       } finally {
         setIsLoading(false);
@@ -183,31 +183,31 @@ const ProfilePage = () => {
 
   const handleProfileUpdate = async () => {
     if (!profile) return;
-    
+
     try {
       setIsUpdating(true);
-      
+
       const updatedProfile = {
         ...profile,
         full_name: fullName,
-        job_title: jobTitle,
+        job_title: jobTitle
       };
-      
+
       const response = await window.ezsite.apis.tableUpdate(6624, updatedProfile);
       if (response.error) throw response.error;
-      
+
       setProfile(updatedProfile);
-      
+
       toast({
         title: 'Profile Updated',
-        description: 'Your profile has been successfully updated.',
+        description: 'Your profile has been successfully updated.'
       });
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
         title: 'Update Failed',
         description: 'Failed to update your profile. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsUpdating(false);
@@ -222,77 +222,59 @@ const ProfilePage = () => {
 
   const uploadProfileImage = async () => {
     if (!selectedFile || !profile) return;
-    
+
     try {
       setUploadProgress(0);
       
-      // Create an XMLHttpRequest to track upload progress
-      const xhr = new XMLHttpRequest();
-      
-      // Set up progress tracking
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const percentComplete = Math.round((event.loaded / event.total) * 100);
-          setUploadProgress(percentComplete);
-        }
-      });
-      
-      // Create a promise to handle the upload
-      const uploadPromise = new Promise<number>((resolve, reject) => {
-        xhr.open('POST', '/api/upload', true);
-        
-        xhr.onload = async () => {
-          if (xhr.status === 200) {
-            try {
-              const response = JSON.parse(xhr.responseText);
-              resolve(response.data);
-            } catch (error) {
-              reject(new Error('Failed to parse response'));
-            }
-          } else {
-            reject(new Error(`Upload failed with status: ${xhr.status}`));
+      // Set up simulated progress updates
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
           }
-        };
-        
-        xhr.onerror = () => {
-          reject(new Error('Upload failed'));
-        };
-        
-        // Create FormData and append the file
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('filename', selectedFile.name);
-        
-        // Send the request
-        xhr.send(formData);
+          return prev + 10;
+        });
+      }, 300);
+
+      // Use the actual API for file upload
+      const uploadResponse = await window.ezsite.apis.upload({
+        filename: selectedFile.name,
+        file: selectedFile
       });
+
+      // Clear the progress interval and set to 100%
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
+      if (uploadResponse.error) throw new Error(uploadResponse.error);
       
-      // Wait for upload to complete
-      const storeFileId = await uploadPromise;
-      
+      // Get the file ID from the response
+      const storeFileId = uploadResponse.data;
+
       // Update profile with new image
       const updatedProfile = {
         ...profile,
         profile_image: storeFileId.toString()
       };
-      
+
       const updateResponse = await window.ezsite.apis.tableUpdate(6624, updatedProfile);
       if (updateResponse.error) throw updateResponse.error;
-      
+
       setProfile(updatedProfile);
       setSelectedFile(null);
       setUploadProgress(0);
-      
+
       toast({
         title: 'Image Uploaded',
-        description: 'Your profile image has been successfully uploaded.',
+        description: 'Your profile image has been successfully uploaded.'
       });
     } catch (error) {
       console.error('Error uploading image:', error);
       toast({
         title: 'Upload Failed',
         description: 'Failed to upload profile image. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
       setUploadProgress(0);
     }
@@ -303,8 +285,8 @@ const ProfilePage = () => {
       <div className="flex items-center justify-center min-h-[60vh]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
         <span className="ml-2 text-lg">Loading profile...</span>
-      </div>
-    );
+      </div>);
+
   }
 
   return (
@@ -317,7 +299,7 @@ const ProfilePage = () => {
           <Card>
             <CardContent className="pt-6 flex flex-col items-center">
               <Avatar className="h-32 w-32 mb-4">
-                <AvatarImage src={profile?.profile_image ? `/api/file/${profile.profile_image}` : ''} alt={profile?.full_name || 'User'} />
+                <AvatarImage src={profile?.profile_image ? profile.profile_image : ''} alt={profile?.full_name || 'User'} />
                 <AvatarFallback className="text-3xl">
                   <User className="h-16 w-16" />
                 </AvatarFallback>
@@ -328,23 +310,23 @@ const ProfilePage = () => {
               
               <div className="w-full mt-4">
                 <Label htmlFor="profile-image" className="block mb-2">Upload Profile Image</Label>
-                <Input 
-                  id="profile-image" 
-                  type="file" 
+                <Input
+                  id="profile-image"
+                  type="file"
                   accept="image/*"
                   onChange={handleFileChange}
-                  className="mb-2"
-                />
+                  className="mb-2" />
+
                 
-                {uploadProgress > 0 && (
-                  <Progress value={uploadProgress} className="mb-2" />
-                )}
+                {uploadProgress > 0 &&
+                <Progress value={uploadProgress} className="mb-2" />
+                }
                 
-                <Button 
+                <Button
                   onClick={uploadProfileImage}
                   disabled={!selectedFile}
-                  className="w-full"
-                >
+                  className="w-full">
+
                   <Upload className="mr-2 h-4 w-4" />
                   Upload
                 </Button>
@@ -369,9 +351,9 @@ const ProfilePage = () => {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Last Active:</span>
                   <span className="font-medium">
-                    {activity?.last_active 
-                      ? new Date(activity.last_active).toLocaleDateString() 
-                      : 'Today'}
+                    {activity?.last_active ?
+                    new Date(activity.last_active).toLocaleDateString() :
+                    'Today'}
                   </span>
                 </div>
               </div>
@@ -397,41 +379,41 @@ const ProfilePage = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="full-name">Full Name</Label>
-                <Input 
-                  id="full-name" 
-                  value={fullName} 
+                <Input
+                  id="full-name"
+                  value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Enter your full name"
-                />
+                  placeholder="Enter your full name" />
+
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="job-title">Job Title</Label>
-                <Input 
-                  id="job-title" 
-                  value={jobTitle} 
+                <Input
+                  id="job-title"
+                  value={jobTitle}
                   onChange={(e) => setJobTitle(e.target.value)}
-                  placeholder="Enter your job title"
-                />
+                  placeholder="Enter your job title" />
+
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input 
-                  id="email" 
-                  value={user?.Email || ''} 
+                <Input
+                  id="email"
+                  value={user?.Email || ''}
                   disabled
-                  className="bg-muted"
-                />
+                  className="bg-muted" />
+
                 <p className="text-xs text-muted-foreground">Email cannot be changed</p>
               </div>
             </CardContent>
             <CardFooter>
-              <Button 
+              <Button
                 onClick={handleProfileUpdate}
                 disabled={isUpdating}
-                className="ml-auto"
-              >
+                className="ml-auto">
+
                 {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Save Changes
               </Button>
@@ -474,8 +456,8 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ProfilePage;

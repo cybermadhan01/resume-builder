@@ -7,23 +7,23 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+  CardTitle } from
+'@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  FileText, 
-  CheckSquare, 
-  Loader2, 
-  Eye, 
-  Download, 
+import {
+  FileText,
+  CheckSquare,
+  Loader2,
+  Eye,
+  Download,
   Trash2,
   Calendar,
-  Clock
-} from 'lucide-react';
+  Clock } from
+'lucide-react';
 import { format } from 'date-fns';
 
 interface Resume {
@@ -72,12 +72,12 @@ const HistoryPage = () => {
           OrderByField: "last_modified",
           IsAsc: false,
           Filters: [
-            {
-              name: "user_id",
-              op: "Equal",
-              value: user?.ID
-            }
-          ]
+          {
+            name: "user_id",
+            op: "Equal",
+            value: user?.ID
+          }]
+
         });
 
         if (resumesResponse.error) throw resumesResponse.error;
@@ -92,12 +92,12 @@ const HistoryPage = () => {
           OrderByField: "check_date",
           IsAsc: false,
           Filters: [
-            {
-              name: "user_id",
-              op: "Equal",
-              value: user?.ID
-            }
-          ]
+          {
+            name: "user_id",
+            op: "Equal",
+            value: user?.ID
+          }]
+
         });
 
         if (atsResponse.error) throw atsResponse.error;
@@ -108,7 +108,7 @@ const HistoryPage = () => {
         toast({
           title: 'Error',
           description: 'Failed to load your history. Please try again.',
-          variant: 'destructive',
+          variant: 'destructive'
         });
       }
     };
@@ -118,48 +118,48 @@ const HistoryPage = () => {
 
   const handleDeleteResume = async (resumeId: number) => {
     if (!confirm('Are you sure you want to delete this resume?')) return;
-    
+
     try {
       const response = await window.ezsite.apis.tableDelete(6625, { ID: resumeId });
       if (response.error) throw response.error;
-      
+
       // Remove the deleted resume from state
-      setResumes(resumes.filter(resume => resume.id !== resumeId));
-      
+      setResumes(resumes.filter((resume) => resume.id !== resumeId));
+
       toast({
         title: 'Resume Deleted',
-        description: 'Your resume has been successfully deleted.',
+        description: 'Your resume has been successfully deleted.'
       });
     } catch (error) {
       console.error('Error deleting resume:', error);
       toast({
         title: 'Delete Failed',
         description: 'Failed to delete the resume. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     }
   };
 
   const handleDeleteATSCheck = async (checkId: number) => {
     if (!confirm('Are you sure you want to delete this ATS check?')) return;
-    
+
     try {
       const response = await window.ezsite.apis.tableDelete(6626, { ID: checkId });
       if (response.error) throw response.error;
-      
+
       // Remove the deleted check from state
-      setAtsChecks(atsChecks.filter(check => check.id !== checkId));
-      
+      setAtsChecks(atsChecks.filter((check) => check.id !== checkId));
+
       toast({
         title: 'ATS Check Deleted',
-        description: 'Your ATS check has been successfully deleted.',
+        description: 'Your ATS check has been successfully deleted.'
       });
     } catch (error) {
       console.error('Error deleting ATS check:', error);
       toast({
         title: 'Delete Failed',
         description: 'Failed to delete the ATS check. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     }
   };
@@ -197,7 +197,7 @@ const HistoryPage = () => {
   };
 
   const getTemplateName = (templateKey: string) => {
-    const templates: {[key: string]: string} = {
+    const templates: {[key: string]: string;} = {
       'basic': 'Basic Template',
       'modern': 'Modern Template',
       'professional': 'Professional Template'
@@ -230,32 +230,32 @@ const HistoryPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoadingResumes ? (
-                <div className="flex items-center justify-center py-10">
+              {isLoadingResumes ?
+              <div className="flex items-center justify-center py-10">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   <span className="ml-2">Loading your resumes...</span>
-                </div>
-              ) : resumes.length === 0 ? (
-                <div className="text-center py-10">
+                </div> :
+              resumes.length === 0 ?
+              <div className="text-center py-10">
                   <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
                   <h3 className="text-lg font-medium">No resumes found</h3>
                   <p className="text-muted-foreground mb-4">You haven't created any resumes yet.</p>
                   <Button onClick={() => navigate('/resume')}>Create Resume</Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {resumes.map((resume) => (
-                    <Card key={resume.id} className="overflow-hidden">
+                </div> :
+
+              <div className="space-y-4">
+                  {resumes.map((resume) =>
+                <Card key={resume.id} className="overflow-hidden">
                       <div className="md:flex">
-                        {resume.thumbnail && (
-                          <div className="md:w-1/4 bg-muted">
-                            <img 
-                              src={`/api/file/${resume.thumbnail}`} 
-                              alt={resume.title}
-                              className="object-cover w-full h-full"
-                            />
+                        {resume.thumbnail &&
+                    <div className="md:w-1/4 bg-muted">
+                            <img
+                        src={`/api/file/${resume.thumbnail}`}
+                        alt={resume.title}
+                        className="object-cover w-full h-full" />
+
                           </div>
-                        )}
+                    }
                         <div className="md:w-3/4 p-4">
                           <div className="flex justify-between items-start">
                             <div>
@@ -273,19 +273,19 @@ const HistoryPage = () => {
                               </div>
                             </div>
                             <div className="flex space-x-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => viewResume(resume.id)}
-                              >
+                              <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => viewResume(resume.id)}>
+
                                 <Eye className="h-4 w-4 mr-1" />
                                 View
                               </Button>
                               <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleDeleteResume(resume.id)}
-                              >
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeleteResume(resume.id)}>
+
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
@@ -293,9 +293,9 @@ const HistoryPage = () => {
                         </div>
                       </div>
                     </Card>
-                  ))}
+                )}
                 </div>
-              )}
+              }
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button variant="outline" onClick={() => navigate('/')}>Back to Home</Button>
@@ -313,22 +313,22 @@ const HistoryPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {isLoadingATS ? (
-                <div className="flex items-center justify-center py-10">
+              {isLoadingATS ?
+              <div className="flex items-center justify-center py-10">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                   <span className="ml-2">Loading your ATS checks...</span>
-                </div>
-              ) : atsChecks.length === 0 ? (
-                <div className="text-center py-10">
+                </div> :
+              atsChecks.length === 0 ?
+              <div className="text-center py-10">
                   <CheckSquare className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
                   <h3 className="text-lg font-medium">No ATS checks found</h3>
                   <p className="text-muted-foreground mb-4">You haven't performed any ATS compatibility checks yet.</p>
                   <Button onClick={() => navigate('/ats-checker')}>Check Resume</Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {atsChecks.map((check) => (
-                    <Card key={check.id}>
+                </div> :
+
+              <div className="space-y-4">
+                  {atsChecks.map((check) =>
+                <Card key={check.id}>
                       <CardContent className="p-4">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                           <div className="space-y-2 mb-4 md:mb-0">
@@ -357,21 +357,21 @@ const HistoryPage = () => {
                           </div>
                           
                           <div className="flex space-x-2 w-full md:w-auto">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="flex-1 md:flex-none"
-                              onClick={() => viewATSCheck(check.id)}
-                            >
+                            <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 md:flex-none"
+                          onClick={() => viewATSCheck(check.id)}>
+
                               <Eye className="h-4 w-4 mr-1" />
                               View
                             </Button>
                             <Button
-                              variant="destructive"
-                              size="sm"
-                              className="flex-1 md:flex-none"
-                              onClick={() => handleDeleteATSCheck(check.id)}
-                            >
+                          variant="destructive"
+                          size="sm"
+                          className="flex-1 md:flex-none"
+                          onClick={() => handleDeleteATSCheck(check.id)}>
+
                               <Trash2 className="h-4 w-4" />
                               Delete
                             </Button>
@@ -379,9 +379,9 @@ const HistoryPage = () => {
                         </div>
                       </CardContent>
                     </Card>
-                  ))}
+                )}
                 </div>
-              )}
+              }
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button variant="outline" onClick={() => navigate('/')}>Back to Home</Button>
@@ -390,8 +390,8 @@ const HistoryPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
-  );
+    </div>);
+
 };
 
 export default HistoryPage;
