@@ -8,9 +8,9 @@ interface ModernYellowTemplateProps {
 
 const ModernYellowTemplate: React.FC<ModernYellowTemplateProps> = ({ resumeData, preview = false }) => {
   // Set scaling for preview mode
-  const containerClass = preview 
-    ? 'scale-[0.4] origin-top transform' 
-    : 'w-full';
+  const containerClass = preview ?
+  'scale-[0.4] origin-top transform' :
+  'w-full';
 
   return (
     <div className={`${containerClass} font-sans`} style={{ maxWidth: '850px', margin: '0 auto' }}>
@@ -23,17 +23,17 @@ const ModernYellowTemplate: React.FC<ModernYellowTemplateProps> = ({ resumeData,
           {/* Profile image */}
           <div className="relative z-10 flex justify-center mb-6 mt-[80px]">
             <div className="rounded-full border-4 border-white w-40 h-40 overflow-hidden bg-gray-200 flex items-center justify-center">
-              {resumeData.personalInfo.profileImage ? (
-                <img 
-                  src={resumeData.personalInfo.profileImage} 
-                  alt={resumeData.personalInfo.name} 
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <span className="text-gray-400 text-4xl">
+              {resumeData.personalInfo.profileImage ?
+              <img
+                src={resumeData.personalInfo.profileImage}
+                alt={resumeData.personalInfo.name}
+                className="object-cover w-full h-full" /> :
+
+
+              <span className="text-gray-400 text-4xl">
                   {resumeData.personalInfo.name.charAt(0)}
                 </span>
-              )}
+              }
             </div>
           </div>
 
@@ -45,26 +45,26 @@ const ModernYellowTemplate: React.FC<ModernYellowTemplateProps> = ({ resumeData,
             </div>
             
             <ul className="space-y-3">
-              {resumeData.personalInfo.phone && (
-                <li className="flex">
+              {resumeData.personalInfo.phone &&
+              <li className="flex">
                   <div className="mr-3 text-yellow-500">•</div>
                   <div>{resumeData.personalInfo.phone}</div>
                 </li>
-              )}
+              }
               
-              {resumeData.personalInfo.email && (
-                <li className="flex">
+              {resumeData.personalInfo.email &&
+              <li className="flex">
                   <div className="mr-3 text-yellow-500">•</div>
                   <div>{resumeData.personalInfo.email}</div>
                 </li>
-              )}
+              }
               
-              {resumeData.personalInfo.address && (
-                <li className="flex">
+              {resumeData.personalInfo.address &&
+              <li className="flex">
                   <div className="mr-3 text-yellow-500">•</div>
                   <div>{resumeData.personalInfo.address}</div>
                 </li>
-              )}
+              }
             </ul>
           </div>
 
@@ -91,13 +91,13 @@ const ModernYellowTemplate: React.FC<ModernYellowTemplateProps> = ({ resumeData,
             </div>
             
             <div className="space-y-4">
-              {resumeData.education.map((edu) => (
-                <div key={edu.id}>
+              {resumeData.education.map((edu) =>
+              <div key={edu.id}>
                   <h4 className="font-bold">{edu.school}</h4>
                   <p>{edu.degree}</p>
                   <p className="text-yellow-400">{edu.date}</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -137,15 +137,15 @@ const ModernYellowTemplate: React.FC<ModernYellowTemplateProps> = ({ resumeData,
             </div>
             
             <div className="space-y-6">
-              {resumeData.experience.map((exp) => (
-                <div key={exp.id} className="relative border-l-2 border-yellow-500 pl-4 ml-3">
+              {resumeData.experience.map((exp) =>
+              <div key={exp.id} className="relative border-l-2 border-yellow-500 pl-4 ml-3">
                   <div className="absolute w-3 h-3 bg-yellow-500 rounded-full -left-[7px] top-1"></div>
                   <h3 className="font-bold text-lg">{exp.position}</h3>
                   <h4 className="text-gray-500">{exp.company} / {exp.location || "Remote"}</h4>
                   <p className="text-yellow-500 text-sm">{exp.startDate} - {exp.endDate}</p>
                   <p className="mt-2 text-gray-700">{exp.description}</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
@@ -157,22 +157,22 @@ const ModernYellowTemplate: React.FC<ModernYellowTemplateProps> = ({ resumeData,
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              {resumeData.skills.map((skill, index) => (
-                <div key={index} className="flex items-center">
+              {resumeData.skills.map((skill, index) =>
+              <div key={index} className="flex items-center">
                   <div className="mr-2 w-24">
                     <div className="font-medium">{skill}</div>
                   </div>
                   <div className="flex-1 bg-gray-200 h-2 rounded-full overflow-hidden">
-                    <div className="bg-yellow-500 h-full rounded-full" style={{ width: `${85 - (index * 5)}%` }}></div>
+                    <div className="bg-yellow-500 h-full rounded-full" style={{ width: `${85 - index * 5}%` }}></div>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default ModernYellowTemplate;

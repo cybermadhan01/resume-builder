@@ -66,7 +66,7 @@ const DEFAULT_RESUME_DATA: ResumeData = {
 };
 
 // Map of template components
-const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: ResumeData;preview?: boolean;}>} = {
+const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: ResumeData;preview?: boolean;}>;} = {
   'BasicTemplate': BasicTemplate,
   'ModernTemplate': ModernTemplate,
   'ProfessionalTemplate': ProfessionalTemplate,
@@ -109,7 +109,7 @@ const ResumePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { templates, isLoading: templatesLoading } = useResumeTemplates();
   const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>([]);
-  const [progress, setProgress] = useState<{[key: string]: boolean}>({
+  const [progress, setProgress] = useState<{[key: string]: boolean;}>({
     templateSelected: false,
     contentEdited: false
   });
@@ -665,13 +665,13 @@ const ResumePage = () => {
                 </div>
               </div>
               
-              {templatesLoading ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+              {templatesLoading ?
+              <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                   <Loader2 className="mx-auto h-12 w-12 text-gray-400 animate-spin mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">Loading templates...</h3>
                   <p className="text-gray-500">Please wait while we fetch available templates</p>
-                </div>
-              ) : filteredTemplates.length === 0 ?
+                </div> :
+              filteredTemplates.length === 0 ?
               <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                   <Search className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">No templates found</h3>

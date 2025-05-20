@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, FileText, CheckSquare, Star, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, FileText, CheckSquare, Star, Sparkles, TrendingUp, Award, Globe, BookOpen, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState, useEffect } from "react";
@@ -57,6 +57,29 @@ const features = [
   icon: <TrendingUp className="h-10 w-10 text-indigo-500" />,
   title: "Job Match Analysis",
   description: "See how well your resume matches specific job descriptions"
+}];
+
+// Explore more features section
+const exploreFeatures = [
+{
+  icon: <Award className="h-14 w-14 text-orange-500" />,
+  title: "Premium Templates",
+  description: "Access our library of 100+ premium templates designed by HR professionals"
+},
+{
+  icon: <Globe className="h-14 w-14 text-blue-500" />,
+  title: "Industry-Specific Formats",
+  description: "Find templates tailored for your specific industry and career level"
+},
+{
+  icon: <BookOpen className="h-14 w-14 text-green-500" />,
+  title: "Resume Guide",
+  description: "Learn best practices and expert tips for creating impactful resumes"
+},
+{
+  icon: <Zap className="h-14 w-14 text-yellow-500" />,
+  title: "Instant Analysis",
+  description: "Get real-time feedback on your resume's effectiveness and ATS compatibility"
 }];
 
 
@@ -150,7 +173,7 @@ const HomePage = () => {
                       setAuthModalOpen(true);
                       return;
                     }
-                    window.location.href = '/resume-builder';
+                    window.location.href = '/resume';
                   }}>
 
                   Create Resume
@@ -246,7 +269,7 @@ const HomePage = () => {
                         setAuthModalOpen(true);
                         return;
                       }
-                      window.location.href = '/resume-builder';
+                      window.location.href = '/resume';
                     }}>
 
                       Use Template
@@ -266,7 +289,7 @@ const HomePage = () => {
                   setAuthModalOpen(true);
                   return;
                 }
-                window.location.href = '/resume-builder';
+                window.location.href = '/resume';
               }}>
 
               View all templates <ArrowRight className="h-4 w-4 ml-2" />
@@ -308,7 +331,7 @@ const HomePage = () => {
                       setAuthModalOpen(true);
                       return;
                     }
-                    window.location.href = '/resume-builder';
+                    window.location.href = '/resume';
                   }}>
 
                   Create Your Resume
@@ -325,6 +348,140 @@ const HomePage = () => {
 
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Explore More Features Section - New Section */}
+      <section className="py-20 bg-gray-950 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/10 to-purple-900/10"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4">
+              Explore What We Offer
+            </h2>
+            <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+              Our platform provides everything you need to create impressive, professional resumes that stand out to both employers and ATS systems.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
+            {exploreFeatures.map((feature, index) => (
+              <Card key={index} className="bg-gray-900/50 border-gray-800 hover:border-purple-500 transition-all duration-300 overflow-hidden hover:shadow-lg hover:shadow-purple-500/10">
+                <CardContent className="p-6 text-center">
+                  <div className="flex justify-center mb-4">
+                    <div className="p-4 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700">
+                      {feature.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                  <p className="text-gray-400">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          
+          <div className="flex justify-center mt-12">
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-xl shadow-purple-900/20"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  setAuthModalOpen(true);
+                  return;
+                }
+                window.location.href = '/resume';
+              }}>
+              Get Started Today
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section - New Section */}
+      <section className="py-20 bg-black">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 to-orange-400 bg-clip-text text-transparent mb-4">
+              What Our Users Say
+            </h2>
+            <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+              Join thousands of professionals who have boosted their career success with our platform.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="bg-gradient-to-br from-gray-900 to-black border border-pink-500/30 relative overflow-hidden">
+              <CardContent className="p-6 relative z-10">
+                <div className="mb-6">
+                  <div className="flex items-center text-yellow-500 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-300 italic">
+                    "I landed three interviews in my first week after using this resume builder. The ATS optimization really works!"
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center text-white font-bold mr-3">
+                    JS
+                  </div>
+                  <div>
+                    <p className="font-semibold">Jamie Smith</p>
+                    <p className="text-sm text-gray-400">Software Engineer</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 relative overflow-hidden">
+              <CardContent className="p-6 relative z-10">
+                <div className="mb-6">
+                  <div className="flex items-center text-yellow-500 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-300 italic">
+                    "The templates are elegant and professional. After struggling for months, I finally have a resume I'm proud to share."
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold mr-3">
+                    MP
+                  </div>
+                  <div>
+                    <p className="font-semibold">Michael Parker</p>
+                    <p className="text-sm text-gray-400">Marketing Director</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-gray-900 to-black border border-blue-500/30 relative overflow-hidden">
+              <CardContent className="p-6 relative z-10">
+                <div className="mb-6">
+                  <div className="flex items-center text-yellow-500 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-current" />
+                    ))}
+                  </div>
+                  <p className="text-gray-300 italic">
+                    "The ATS checker gave me valuable insights on how to improve my resume. It's like having a career coach!"
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-teal-500 flex items-center justify-center text-white font-bold mr-3">
+                    AR
+                  </div>
+                  <div>
+                    <p className="font-semibold">Alex Rodriguez</p>
+                    <p className="text-sm text-gray-400">Data Analyst</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

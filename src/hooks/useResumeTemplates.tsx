@@ -52,9 +52,9 @@ const useResumeTemplates = () => {
           }));
 
           // Combine with existing templates, giving priority to DB templates
-          const existingTemplateIds = dbTemplates.map(t => t.id);
-          const remainingTemplates = EXTENDED_TEMPLATES.filter(t => !existingTemplateIds.includes(t.id));
-          
+          const existingTemplateIds = dbTemplates.map((t) => t.id);
+          const remainingTemplates = EXTENDED_TEMPLATES.filter((t) => !existingTemplateIds.includes(t.id));
+
           setTemplates([...dbTemplates, ...remainingTemplates]);
         }
       } catch (err) {
