@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 
 const NotFound = () => {
@@ -47,7 +47,7 @@ const NotFound = () => {
           transition={{ duration: 0.5, delay: 0.6 }}>
 
           <Button asChild variant="default" size="lg">
-            <a href="/">Back to Home</a>
+            <Link to="/">Back to Home</Link>
           </Button>
         </motion.div>
       </motion.div>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, FileText, CheckSquare, Star, Sparkles, TrendingUp, Award, Globe, BookOpen, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
@@ -85,6 +85,7 @@ const exploreFeatures = [
 
 const HomePage = () => {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [resumeTemplates, setResumeTemplates] = useState(defaultTemplates);
   const [premiumTemplate, setPremiumTemplate] = useState({
@@ -173,7 +174,7 @@ const HomePage = () => {
                       setAuthModalOpen(true);
                       return;
                     }
-                    window.location.href = '/resume';
+                    navigate('/resume');
                   }}>
 
                   Create Resume
@@ -269,7 +270,7 @@ const HomePage = () => {
                         setAuthModalOpen(true);
                         return;
                       }
-                      window.location.href = '/resume';
+                      navigate('/resume');
                     }}>
 
                       Use Template
@@ -289,7 +290,7 @@ const HomePage = () => {
                   setAuthModalOpen(true);
                   return;
                 }
-                window.location.href = '/resume';
+                navigate('/resume');
               }}>
 
               View all templates <ArrowRight className="h-4 w-4 ml-2" />
@@ -331,7 +332,7 @@ const HomePage = () => {
                       setAuthModalOpen(true);
                       return;
                     }
-                    window.location.href = '/resume';
+                    navigate('/resume');
                   }}>
 
                   Create Your Resume
@@ -366,8 +367,8 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-10">
-            {exploreFeatures.map((feature, index) => (
-              <Card key={index} className="bg-gray-900/50 border-gray-800 hover:border-purple-500 transition-all duration-300 overflow-hidden hover:shadow-lg hover:shadow-purple-500/10">
+            {exploreFeatures.map((feature, index) =>
+            <Card key={index} className="bg-gray-900/50 border-gray-800 hover:border-purple-500 transition-all duration-300 overflow-hidden hover:shadow-lg hover:shadow-purple-500/10">
                 <CardContent className="p-6 text-center">
                   <div className="flex justify-center mb-4">
                     <div className="p-4 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700">
@@ -378,7 +379,7 @@ const HomePage = () => {
                   <p className="text-gray-400">{feature.description}</p>
                 </CardContent>
               </Card>
-            ))}
+            )}
           </div>
           
           <div className="flex justify-center mt-12">
@@ -390,7 +391,7 @@ const HomePage = () => {
                   setAuthModalOpen(true);
                   return;
                 }
-                window.location.href = '/resume';
+                navigate('/resume');
               }}>
               Get Started Today
             </Button>
@@ -415,9 +416,9 @@ const HomePage = () => {
               <CardContent className="p-6 relative z-10">
                 <div className="mb-6">
                   <div className="flex items-center text-yellow-500 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-current" />
-                    ))}
+                    {[...Array(5)].map((_, i) =>
+                    <Star key={i} className="h-4 w-4 fill-current" />
+                    )}
                   </div>
                   <p className="text-gray-300 italic">
                     "I landed three interviews in my first week after using this resume builder. The ATS optimization really works!"
@@ -439,9 +440,9 @@ const HomePage = () => {
               <CardContent className="p-6 relative z-10">
                 <div className="mb-6">
                   <div className="flex items-center text-yellow-500 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-current" />
-                    ))}
+                    {[...Array(5)].map((_, i) =>
+                    <Star key={i} className="h-4 w-4 fill-current" />
+                    )}
                   </div>
                   <p className="text-gray-300 italic">
                     "The templates are elegant and professional. After struggling for months, I finally have a resume I'm proud to share."
@@ -463,9 +464,9 @@ const HomePage = () => {
               <CardContent className="p-6 relative z-10">
                 <div className="mb-6">
                   <div className="flex items-center text-yellow-500 mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-current" />
-                    ))}
+                    {[...Array(5)].map((_, i) =>
+                    <Star key={i} className="h-4 w-4 fill-current" />
+                    )}
                   </div>
                   <p className="text-gray-300 italic">
                     "The ATS checker gave me valuable insights on how to improve my resume. It's like having a career coach!"
