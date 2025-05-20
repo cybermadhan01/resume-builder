@@ -22,6 +22,18 @@ export const TEMPLATE_CATEGORIES = [
 
 // This array will be populated with 50+ templates
 export const EXTENDED_TEMPLATES: TemplateData[] = [
+// Modern Yellow Template (from example)
+{
+  id: "modern-yellow",
+  name: "Modern Yellow",
+  displayName: "Modern Yellow",
+  rating: 4.9,
+  downloads: 842,
+  category: "modern",
+  allowImageUpload: true,
+  description: "A bold modern template with striking yellow accents",
+  component: "ModernYellowTemplate"
+},
 // Basic templates
 {
   id: "basic",

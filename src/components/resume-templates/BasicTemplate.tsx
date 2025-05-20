@@ -12,17 +12,17 @@ const BasicTemplate: React.FC<BasicTemplateProps> = ({ resumeData, preview = fal
   return (
     <div className={`w-full h-full bg-white text-black p-8 ${scale}`} style={{ fontSize: preview ? "16px" : "12px" }}>
       <div className="text-center mb-6">
-        {resumeData.personalInfo.profileImage && (
-          <div className="flex justify-center mb-3">
+        {resumeData.personalInfo.profileImage &&
+        <div className="flex justify-center mb-3">
             <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300">
-              <img 
-                src={resumeData.personalInfo.profileImage} 
-                alt="Profile" 
-                className="w-full h-full object-cover"
-              />
+              <img
+              src={resumeData.personalInfo.profileImage}
+              alt="Profile"
+              className="w-full h-full object-cover" />
+
             </div>
           </div>
-        )}
+        }
         <h1 className="text-2xl font-bold uppercase">{resumeData.personalInfo.name}</h1>
         <p className="text-lg mb-2">{resumeData.personalInfo.title}</p>
         <div className="flex justify-center text-sm space-x-4">

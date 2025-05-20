@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, FileText, CheckSquare, Home, User, LogOut } from "lucide-react";
+import { Menu, FileText, CheckSquare, Home, User, LogOut, History } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import AuthModal from "@/components/auth/AuthModal";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";

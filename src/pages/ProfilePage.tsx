@@ -52,7 +52,7 @@ const ProfilePage = () => {
   const [jobTitle, setJobTitle] = useState('');
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
       navigate('/');
       return;
     }
@@ -225,10 +225,10 @@ const ProfilePage = () => {
 
     try {
       setUploadProgress(0);
-      
+
       // Set up simulated progress updates
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
+        setUploadProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return prev;
@@ -248,7 +248,7 @@ const ProfilePage = () => {
       setUploadProgress(100);
 
       if (uploadResponse.error) throw new Error(uploadResponse.error);
-      
+
       // Get the file ID from the response
       const storeFileId = uploadResponse.data;
 

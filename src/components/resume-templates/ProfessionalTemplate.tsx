@@ -14,15 +14,15 @@ const ProfessionalTemplate: React.FC<ProfessionalTemplateProps> = ({ resumeData,
       <div className="p-8">
         <div className="flex flex-col md:flex-row justify-between items-start mb-6">
           <div className="flex items-center gap-4">
-            {resumeData.personalInfo.profileImage && (
-              <div className="w-20 h-20 rounded-full overflow-hidden border border-gray-300 flex-shrink-0">
-                <img 
-                  src={resumeData.personalInfo.profileImage} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover"
-                />
+            {resumeData.personalInfo.profileImage &&
+            <div className="w-20 h-20 rounded-full overflow-hidden border border-gray-300 flex-shrink-0">
+                <img
+                src={resumeData.personalInfo.profileImage}
+                alt="Profile"
+                className="w-full h-full object-cover" />
+
               </div>
-            )}
+            }
             <div>
               <h1 className="text-3xl font-bold text-gray-800">{resumeData.personalInfo.name}</h1>
               <p className="text-xl text-gray-600 mt-1">{resumeData.personalInfo.title}</p>

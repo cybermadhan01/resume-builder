@@ -114,7 +114,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
       // Set up simulated progress updates
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
+        setUploadProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return prev;

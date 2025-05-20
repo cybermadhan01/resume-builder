@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import useResumeTemplates from "@/hooks/useResumeTemplates";
 import html2pdf from "html2pdf.js";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import BasicTemplate from "@/components/resume-templates/BasicTemplate";
 import ModernTemplate from "@/components/resume-templates/ModernTemplate";
 import ProfessionalTemplate from "@/components/resume-templates/ProfessionalTemplate";
+import ModernYellowTemplate from "@/components/resume-templates/ModernYellowTemplate";
 
 const DEFAULT_RESUME_DATA: ResumeData = {
   personalInfo: {
@@ -64,10 +66,11 @@ const DEFAULT_RESUME_DATA: ResumeData = {
 };
 
 // Map of template components
-const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: ResumeData;preview?: boolean;}>;} = {
+const TEMPLATE_COMPONENTS: {[key: string]: React.ComponentType<{resumeData: ResumeData;preview?: boolean;}>} = {
   'BasicTemplate': BasicTemplate,
   'ModernTemplate': ModernTemplate,
-  'ProfessionalTemplate': ProfessionalTemplate
+  'ProfessionalTemplate': ProfessionalTemplate,
+  'ModernYellowTemplate': ModernYellowTemplate
 };
 
 // Export formats available
@@ -104,8 +107,9 @@ const ResumePage = () => {
   const [resumeTitle, setResumeTitle] = useState("My Resume");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>(EXTENDED_TEMPLATES);
-  const [progress, setProgress] = useState<{[key: string]: boolean;}>({
+  const { templates, isLoading: templatesLoading } = useResumeTemplates();
+  const [filteredTemplates, setFilteredTemplates] = useState<TemplateData[]>([]);
+  const [progress, setProgress] = useState<{[key: string]: boolean}>({
     templateSelected: false,
     contentEdited: false
   });
@@ -124,25 +128,25 @@ const ResumePage = () => {
 
   // Filter templates based on category and search query
   useEffect(() => {
-    let templates = [...EXTENDED_TEMPLATES];
+    let allTemplates = [...templates];
 
     // Filter by category
     if (selectedCategory !== 'all') {
-      templates = templates.filter((t) => t.category === selectedCategory);
+      allTemplates = allTemplates.filter((t) => t.category === selectedCategory);
     }
 
     // Filter by search query
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      templates = templates.filter((t) =>
+      allTemplates = allTemplates.filter((t) =>
       t.name.toLowerCase().includes(query) ||
       t.displayName.toLowerCase().includes(query) ||
       t.description && t.description.toLowerCase().includes(query)
       );
     }
 
-    setFilteredTemplates(templates);
-  }, [selectedCategory, searchQuery]);
+    setFilteredTemplates(allTemplates);
+  }, [selectedCategory, searchQuery, templates]);
 
   const loadResume = async (id: number) => {
     try {
@@ -364,7 +368,7 @@ const ResumePage = () => {
     }));
 
     // Find the selected template to show detailed information
-    const template = EXTENDED_TEMPLATES.find((t) => t.id === templateId);
+    const template = templates.find((t) => t.id === templateId);
     if (template) {
       toast({
         title: `${template.displayName} Selected`,
@@ -535,7 +539,7 @@ const ResumePage = () => {
 
   // Determine which template component to render based on the selected template
   const getSelectedTemplateComponent = () => {
-    const template = EXTENDED_TEMPLATES.find((t) => t.id === selectedTemplate);
+    const template = templates.find((t) => t.id === selectedTemplate);
     if (!template) return BasicTemplate; // Default to BasicTemplate if not found
 
     // Find the corresponding component
@@ -661,7 +665,13 @@ const ResumePage = () => {
                 </div>
               </div>
               
-              {filteredTemplates.length === 0 ?
+              {templatesLoading ? (
+                <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                  <Loader2 className="mx-auto h-12 w-12 text-gray-400 animate-spin mb-3" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-1">Loading templates...</h3>
+                  <p className="text-gray-500">Please wait while we fetch available templates</p>
+                </div>
+              ) : filteredTemplates.length === 0 ?
               <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                   <Search className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                   <h3 className="text-lg font-medium text-gray-900 mb-1">No templates found</h3>
@@ -686,6 +696,7 @@ const ResumePage = () => {
                                 {template.component === 'BasicTemplate' && <BasicTemplate resumeData={resumeData} preview={true} />}
                                 {template.component === 'ModernTemplate' && <ModernTemplate resumeData={resumeData} preview={true} />}
                                 {template.component === 'ProfessionalTemplate' && <ProfessionalTemplate resumeData={resumeData} preview={true} />}
+                                {template.component === 'ModernYellowTemplate' && <ModernYellowTemplate resumeData={resumeData} preview={true} />}
                               </>
                       }
                           </div>
